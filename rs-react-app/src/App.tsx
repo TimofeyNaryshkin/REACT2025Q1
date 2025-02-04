@@ -1,8 +1,6 @@
 import './App.css';
 import React, { Component } from 'react';
 import Controls from './components/Controls';
-import Search from './components/UI/Search';
-import Button from './components/UI/Button';
 import axios from 'axios';
 import ResultList from './components/ResultList';
 
@@ -20,8 +18,7 @@ class App extends Component {
   render(): React.ReactNode {
     return (
       <div>
-        <Search></Search>
-        <Button onButtonClick={this.fetchItems}>Search</Button>
+        <Controls onSearchRequested={this.fetchItems}></Controls>
         <ResultList results={this.state.results}></ResultList>
       </div>
     );

@@ -1,16 +1,18 @@
-import React, { Component } from 'react'
-import Search from './UI/Search'
-import Button from './UI/Button'
-import axios from 'axios'
+import React, { Component } from 'react';
+import Search from './UI/Search';
+import Button from './UI/Button';
 
-export default class Controls extends Component {
-  
+interface ControlsProps {
+  onSearchRequested: () => void;
+}
+
+export default class Controls extends Component<ControlsProps> {
   render(): React.ReactNode {
     return (
       <div>
         <Search></Search>
-        <Button onButtonClick={this.fetchItems}>Search</Button>
+        <Button onButtonClick={this.props.onSearchRequested}>Search</Button>
       </div>
-    )
+    );
   }
 }
