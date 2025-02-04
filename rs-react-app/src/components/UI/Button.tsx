@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 interface ButtonProps {
   children: React.ReactNode;
-  onButtonClick: () => void;
+  onButtonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export default class Button extends Component<ButtonProps> {

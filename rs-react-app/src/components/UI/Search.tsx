@@ -1,9 +1,21 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
-export default class Search extends Component {
+interface SearchProps {
+  inputType: string;
+  inputPlaceholder: string;
+  inputValue: string;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export default class Search extends Component<SearchProps> {
   render(): React.ReactNode {
     return (
-      <input/>
-    )
+      <input
+        value={this.props.inputValue}
+        onChange={this.props.onInputChange}
+        type={this.props.inputType}
+        placeholder={this.props.inputPlaceholder}
+      />
+    );
   }
 }

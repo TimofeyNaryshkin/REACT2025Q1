@@ -14,7 +14,6 @@ export interface ResultData {
   starship_class: string
   url: string
 }
-
 export default class ResultItem extends Component<ResultItemProps> {
   render(): React.ReactNode {
     return (
