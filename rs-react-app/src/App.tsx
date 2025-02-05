@@ -5,16 +5,17 @@ import axios from 'axios';
 import ResultList, { HeaderInterface } from './components/ResultList';
 import { ResultData } from './components/ResultItem';
 import Loader from './components/UI/Loader/Loader';
+import ErrorBoundary from './components/ErrorBoundary';
 
 interface AppState {
-  results: [];
+  results: object[];
   header: HeaderInterface;
   searchQuery: string;
   isLoading: boolean;
   hasError: boolean;
 }
 
-class App extends Component<AppState> {
+class App extends Component<object, AppState> {
   state = {
     results: [],
     header: {
@@ -68,48 +69,52 @@ class App extends Component<AppState> {
           },
         });
       }
-      localStorage.setItem('lastSearch', this.state.searchQuery)
+      localStorage.setItem('lastSearch', this.state.searchQuery);
     }
     this.setState({ isLoading: false });
   };
 
   componentDidMount(): void {
-    this.setState({ searchQuery: localStorage.lastSearch });
+    if (localStorage.lastSearch) {
+      this.setState({ searchQuery: localStorage.lastSearch });
+    }
     this.fetchItems();
   }
 
   render(): React.ReactNode {
     return (
-      <div>
-        <Controls
-          inputType="text"
-          inputPlaceholder="Starship name"
-          inputValue={this.state.searchQuery}
-          onInputChange={this.changeInput}
-          onButtonClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-            e.preventDefault();
-            this.fetchItems();
-          }}
-        ></Controls>
-        {this.state.isLoading ? (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: '20px',
+      <ErrorBoundary>
+        <div>
+          <Controls
+            inputType="text"
+            inputPlaceholder="Starship name"
+            inputValue={this.state.searchQuery}
+            onInputChange={this.changeInput}
+            onButtonClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              e.preventDefault();
+              this.fetchItems();
             }}
-          >
-            <Loader />
-          </div>
-        ) : this.state.hasError ? (
-          <h1>Request error D:</h1>
-        ) : (
-          <ResultList
-            header={this.state.header}
-            results={this.state.results}
-          ></ResultList>
-        )}
-      </div>
+          ></Controls>
+          {this.state.isLoading ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '20px',
+              }}
+            >
+              <Loader />
+            </div>
+          ) : this.state.hasError ? (
+            <h1>Request error D:</h1>
+          ) : (
+            <ResultList
+              header={this.state.header}
+              results={this.state.results}
+            ></ResultList>
+          )}
+        </div>
+      </ErrorBoundary>
     );
   }
 }

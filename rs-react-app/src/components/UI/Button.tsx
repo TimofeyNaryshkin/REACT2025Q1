@@ -7,6 +7,8 @@ interface ButtonProps {
 
 export default class Button extends Component<ButtonProps> {
   render(): React.ReactNode {
-    return <button onClick={this.props.onButtonClick}>{this.props.children}</button>;
+    return (
+      <button onClick={this.props.onButtonClick}>{this.props.children}</button>
+    );
   }
 }

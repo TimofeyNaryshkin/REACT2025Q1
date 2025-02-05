@@ -10,8 +10,20 @@ interface ControlsProps {
   inputPlaceholder: string;
 }
 
-export default class Controls extends Component<ControlsProps> {
+interface ControlsState {
+  error: boolean;
+}
+
+export default class Controls extends Component<ControlsProps, ControlsState> {
+  state = {
+    error: false,
+  };
+
   render(): React.ReactNode {
+    if (this.state.error) {
+      throw new Error('Error');
+    }
+
     return (
       <form className="controls">
         <Search
@@ -21,6 +33,14 @@ export default class Controls extends Component<ControlsProps> {
           inputValue={this.props.inputValue}
         ></Search>
         <Button onButtonClick={this.props.onButtonClick}>Search</Button>
+        <Button
+          onButtonClick={(e) => {
+            e.preventDefault();
+            this.setState({ error: true });
+          }}
+        >
+          Throw error
+        </Button>
       </form>
     );
   }
