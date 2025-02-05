@@ -11,6 +11,7 @@ interface AppState {
   header: HeaderInterface;
   searchQuery: string;
   isLoading: boolean;
+  hasError: boolean;
 }
 
 class App extends Component<AppState> {
@@ -22,6 +23,7 @@ class App extends Component<AppState> {
     },
     searchQuery: '',
     isLoading: false,
+    hasError: false,
   };
 
   changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,8 +31,15 @@ class App extends Component<AppState> {
   };
 
   fetchItems = async () => {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, hasError: false });
     const response = await axios.get('https://swapi.dev/api/starships/?page=1');
+    console.log(response);
+    if (
+      response.status.toString().startsWith('4') ||
+      response.status.toString().startsWith('5')
+    ) {
+      this.setState({ hasError: true });
+    }
     const filteredResponse = response.data.results.filter(
       (obj: ResultData) => obj.name === this.state.searchQuery.trim()
     );
@@ -80,7 +89,17 @@ class App extends Component<AppState> {
           }}
         ></Controls>
         {this.state.isLoading ? (
-          <div style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}><Loader /></div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '20px',
+            }}
+          >
+            <Loader />
+          </div>
+        ) : this.state.hasError ? (
+          <h1>Request error D:</h1>
         ) : (
           <ResultList
             header={this.state.header}
