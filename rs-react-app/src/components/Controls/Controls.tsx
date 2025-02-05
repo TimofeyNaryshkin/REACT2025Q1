@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import Search from './UI/Search';
-import Button from './UI/Button';
+import Search from '../UI/Search';
+import Button from '../UI/Button';
+import classes from './Controls.module.css';
 
 interface ControlsProps {
   onButtonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -25,7 +26,7 @@ export default class Controls extends Component<ControlsProps, ControlsState> {
     }
 
     return (
-      <form className="controls">
+      <form className={classes.controls}>
         <Search
           inputType={this.props.inputType}
           onInputChange={this.props.onInputChange}

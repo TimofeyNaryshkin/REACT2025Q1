@@ -1,0 +1,14 @@
+.list {
+  margin-top: 20px;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}

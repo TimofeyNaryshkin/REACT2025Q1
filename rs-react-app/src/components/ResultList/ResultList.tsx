@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import ResultItem from './ResultItem';
-import { ResultData } from './ResultItem';
+import ResultItem from '../ResultItem/ResultItem';
+import { ResultData } from '../ResultItem/ResultItem';
+import classes from './ResultList.module.css';
 
 interface ResultListProps {
   results: ResultData[];
@@ -15,14 +16,16 @@ export interface HeaderInterface {
 export default class ResultList extends Component<ResultListProps> {
   render(): React.ReactNode {
     return (
-      <div className="result-list">
-        <div className="result-list__header">
+      <div className={classes.list}>
+        <div className={classes.header}>
           <div>{this.props.header.name}</div>
           <div>{this.props.header.description}</div>
         </div>
-        {this.props.results.map((result) => (
-          <ResultItem resultData={result} key={result.url} />
-        ))}
+        <div className={classes.content}>
+          {this.props.results.map((result) => (
+            <ResultItem resultData={result} key={result.url} />
+          ))}
+        </div>
       </div>
     );
   }

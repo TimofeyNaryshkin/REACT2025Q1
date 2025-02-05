@@ -1,9 +1,11 @@
 import './App.css';
 import React, { Component } from 'react';
-import Controls from './components/Controls';
+import Controls from './components/Controls/Controls';
 import axios from 'axios';
-import ResultList, { HeaderInterface } from './components/ResultList';
-import { ResultData } from './components/ResultItem';
+import ResultList, {
+  HeaderInterface,
+} from './components/ResultList/ResultList';
+import { ResultData } from './components/ResultItem/ResultItem';
 import Loader from './components/UI/Loader/Loader';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -34,7 +36,6 @@ class App extends Component<object, AppState> {
   fetchItems = async () => {
     this.setState({ isLoading: true, hasError: false });
     const response = await axios.get('https://swapi.dev/api/starships/?page=1');
-    console.log(response);
 
     if (
       response.status.toString().startsWith('4') ||
@@ -62,7 +63,7 @@ class App extends Component<object, AppState> {
         });
       } else {
         this.setState({
-          results: [{ name: 'No starships found', url: Date.now() }],
+          results: [],
           header: {
             name: '',
             description: '',
@@ -84,7 +85,7 @@ class App extends Component<object, AppState> {
   render(): React.ReactNode {
     return (
       <ErrorBoundary>
-        <div>
+        <div className="app">
           <Controls
             inputType="text"
             inputPlaceholder="Starship name"
@@ -100,18 +101,20 @@ class App extends Component<object, AppState> {
               style={{
                 display: 'flex',
                 justifyContent: 'center',
-                marginTop: '20px',
+                marginTop: '150px',
               }}
             >
               <Loader />
             </div>
           ) : this.state.hasError ? (
             <h1>Request error D:</h1>
-          ) : (
+          ) : this.state.results.length ? (
             <ResultList
               header={this.state.header}
               results={this.state.results}
             ></ResultList>
+          ) : (
+            <div className="not-found-msg">No starships found</div>
           )}
         </div>
       </ErrorBoundary>
