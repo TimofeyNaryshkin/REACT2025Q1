@@ -34,15 +34,18 @@ class App extends Component<AppState> {
     this.setState({ isLoading: true, hasError: false });
     const response = await axios.get('https://swapi.dev/api/starships/?page=1');
     console.log(response);
+
     if (
       response.status.toString().startsWith('4') ||
       response.status.toString().startsWith('5')
     ) {
       this.setState({ hasError: true });
     }
+
     const filteredResponse = response.data.results.filter(
       (obj: ResultData) => obj.name === this.state.searchQuery.trim()
     );
+
     if (this.state.searchQuery === '') {
       this.setState({
         results: response.data.results,
@@ -52,7 +55,6 @@ class App extends Component<AppState> {
         },
       });
     } else {
-      localStorage.setItem('lastSearch', this.state.searchQuery);
       if (filteredResponse.length > 0) {
         this.setState({
           results: filteredResponse,
@@ -66,11 +68,13 @@ class App extends Component<AppState> {
           },
         });
       }
+      localStorage.setItem('lastSearch', this.state.searchQuery)
     }
     this.setState({ isLoading: false });
   };
 
   componentDidMount(): void {
+    this.setState({ searchQuery: localStorage.lastSearch });
     this.fetchItems();
   }
 
@@ -84,7 +88,6 @@ class App extends Component<AppState> {
           onInputChange={this.changeInput}
           onButtonClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
-            localStorage.setItem('last search', this.state.searchQuery);
             this.fetchItems();
           }}
         ></Controls>
