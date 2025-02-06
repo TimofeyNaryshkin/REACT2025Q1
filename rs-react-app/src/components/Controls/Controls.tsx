@@ -2,14 +2,9 @@ import React, { useState } from 'react';
 import Search from '../UI/Search';
 import Button from '../UI/Button';
 import classes from './Controls.module.css';
+import { ControlsProps } from '../../types/types';
 
-interface ControlsProps {
-  onButtonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  inputValue: string;
-  inputType: string;
-  inputPlaceholder: string;
-}
+
 
 const Controls: React.FC<ControlsProps> = ({ onButtonClick, ...props }) => {
   const [error, setError] = useState(false);

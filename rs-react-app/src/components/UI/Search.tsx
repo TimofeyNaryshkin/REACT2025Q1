@@ -1,11 +1,7 @@
 import React from 'react';
+import { SearchProps } from '../../types/types';
 
-interface SearchProps {
-  inputType: string;
-  inputPlaceholder: string;
-  inputValue: string;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+
 
 const Search: React.FC<SearchProps> = ({
   inputType,
