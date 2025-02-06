@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Controls from './components/Controls/Controls';
 import axios from 'axios';
 import ResultList from './components/ResultList/ResultList';
@@ -29,8 +29,15 @@ const App: React.FC = () => {
     setSearchQuery(e.target.value);
   };
 
-  const fetchItems = async () => {
+  useEffect(() => {
+    const lastSearch = localStorage.getItem('lastSearch') || '';
+    setSearchQuery(lastSearch);
+    fetchItems(lastSearch);
+  }, []);
+
+  const fetchItems = async (query: string) => {
     setIsLoading(true);
+
     const response = await axios.get('https://swapi.dev/api/starships/?page=1');
 
     if (
@@ -41,10 +48,10 @@ const App: React.FC = () => {
     }
 
     const filteredResponse = response.data.results.filter((obj: ResultData) =>
-      obj.name.toLowerCase().includes(searchQuery.trim().toLowerCase())
+      obj.name.toLowerCase().includes(query.trim().toLowerCase())
     );
 
-    if (searchQuery === '') {
+    if (query === '') {
       setResults(response.data.results);
       setHeader({ name: 'Starship name', description: 'Description' });
     } else {
@@ -54,17 +61,10 @@ const App: React.FC = () => {
         setResults([]);
         setHeader({ name: '', description: '' });
       }
-      localStorage.setItem('lastSearch', searchQuery);
+      localStorage.setItem('lastSearch', query);
     }
     setIsLoading(false);
   };
-
-  /*   componentDidMount(): void {
-    if (localStorage.lastSearch) {
-      this.setState({ searchQuery: localStorage.lastSearch });
-    }
-    this.fetchItems();
-  } */
 
   return (
     <ErrorBoundary>
@@ -73,10 +73,10 @@ const App: React.FC = () => {
           inputType="text"
           inputPlaceholder="Starship name"
           inputValue={searchQuery}
-          onInputChange={changeInput}
-          onButtonClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          onInputChange={(e) => changeInput(e)}
+          onButtonClick={(e) => {
             e.preventDefault();
-            fetchItems();
+            fetchItems(searchQuery);
           }}
         ></Controls>
         {isLoading ? (

@@ -4,8 +4,6 @@ import Button from '../UI/Button';
 import classes from './Controls.module.css';
 import { ControlsProps } from '../../types/types';
 
-
-
 const Controls: React.FC<ControlsProps> = ({ onButtonClick, ...props }) => {
   const [error, setError] = useState(false);
 

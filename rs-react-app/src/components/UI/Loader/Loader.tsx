@@ -5,4 +5,4 @@ const Loader: React.FC = () => {
   return <div className={classes.loader}></div>;
 };
 
-export default Loader
+export default Loader;

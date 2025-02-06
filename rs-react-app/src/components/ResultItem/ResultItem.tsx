@@ -2,7 +2,7 @@ import React from 'react';
 import classes from './ResultItem.module.css';
 import { ResultItemProps } from '../../types/types';
 
-const ResultItem: React.FC<ResultItemProps> = ({resultData}) => {
+const ResultItem: React.FC<ResultItemProps> = ({ resultData }) => {
   return (
     <div className={classes.item}>
       <strong>{resultData.name}</strong>
