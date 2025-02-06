@@ -1,14 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { ButtonProps } from '../../types/types';
 
-interface ButtonProps {
-  children: React.ReactNode;
-  onButtonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-}
 
-export default class Button extends Component<ButtonProps> {
-  render(): React.ReactNode {
-    return (
-      <button onClick={this.props.onButtonClick}>{this.props.children}</button>
-    );
-  }
-}
+
+const Button: React.FC<ButtonProps> = ({ children, onButtonClick }) => {
+  return <button onClick={onButtonClick}>{children}</button>;
+};
+
+export default Button;

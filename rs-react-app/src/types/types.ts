@@ -8,3 +8,8 @@ export interface SearchProps {
 export interface ControlsProps extends SearchProps {
   onButtonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
+
+export interface ButtonProps {
+  children: React.ReactNode;
+  onButtonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}
