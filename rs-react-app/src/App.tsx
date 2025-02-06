@@ -44,8 +44,10 @@ class App extends Component<object, AppState> {
       this.setState({ hasError: true });
     }
 
-    const filteredResponse = response.data.results.filter(
-      (obj: ResultData) => obj.name === this.state.searchQuery.trim()
+    const filteredResponse = response.data.results.filter((obj: ResultData) =>
+      obj.name
+        .toLowerCase()
+        .includes(this.state.searchQuery.trim().toLowerCase())
     );
 
     if (this.state.searchQuery === '') {
