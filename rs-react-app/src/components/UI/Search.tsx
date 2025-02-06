@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 interface SearchProps {
   inputType: string;
@@ -7,15 +7,20 @@ interface SearchProps {
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default class Search extends Component<SearchProps> {
-  render(): React.ReactNode {
-    return (
-      <input
-        value={this.props.inputValue}
-        onChange={this.props.onInputChange}
-        type={this.props.inputType}
-        placeholder={this.props.inputPlaceholder}
-      />
-    );
-  }
-}
+const Search: React.FC<SearchProps> = ({
+  inputType,
+  inputValue,
+  inputPlaceholder,
+  onInputChange,
+}) => {
+  return (
+    <input
+      value={inputValue}
+      onChange={onInputChange}
+      type={inputType}
+      placeholder={inputPlaceholder}
+    />
+  );
+};
+
+export default Search;
