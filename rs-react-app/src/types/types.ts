@@ -22,6 +22,7 @@ export interface ResultListProps {
 export interface HeaderInterface {
   name: string;
   description: string;
+  errorMessage: string;
 }
 
 export interface ResultData {

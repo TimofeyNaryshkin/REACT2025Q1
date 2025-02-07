@@ -13,6 +13,7 @@ const App: React.FC = () => {
   const [header, setHeader] = useState<HeaderInterface>({
     name: '',
     description: '',
+    errorMessage: '',
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredResults, setFilteredResults] = useState<ResultData[]>([]);
@@ -38,9 +39,6 @@ const App: React.FC = () => {
     } else {
       setFilteredResults(results);
     }
-    if (filterResults.length > 0) {
-      setHeader({ name: 'Starship name', description: 'Description' });
-    }
   }, [results]);
 
   useEffect(() => {
@@ -52,6 +50,22 @@ const App: React.FC = () => {
   useEffect(() => {
     filterResults();
   }, [filterResults]);
+
+  useEffect(() => {
+    if (filteredResults.length > 0) {
+      setHeader({
+        name: 'Starship name',
+        description: 'Description',
+        errorMessage: '',
+      });
+    } else {
+      setHeader({
+        name: '',
+        description: '',
+        errorMessage: 'No starships found',
+      });
+    }
+  }, [filteredResults]);
 
   return (
     <ErrorBoundary>
