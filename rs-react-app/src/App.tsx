@@ -1,20 +1,13 @@
 import './App.css';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Controls from './components/Controls/Controls';
-import axios from 'axios';
 import ResultList from './components/ResultList/ResultList';
 import Loader from './components/UI/Loader/Loader';
 import ErrorBoundary from './components/ErrorBoundary';
 import { HeaderInterface, ResultData } from './types/types';
+import { useFetch } from './hooks/useFetch';
+import getStarships from './API/StarshipService';
 
-/* interface AppState {
-  results: object[];
-  header: HeaderInterface;
-  searchQuery: string;
-  isLoading: boolean;
-  hasError: boolean;
-}
- */
 const App: React.FC = () => {
   const [results, setResults] = useState<ResultData[]>([]);
   const [header, setHeader] = useState<HeaderInterface>({
@@ -22,50 +15,43 @@ const App: React.FC = () => {
     description: '',
   });
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [filteredResults, setFilteredResults] = useState<ResultData[]>([]);
+
+  const [fetchShips, isLoading, hasError] = useFetch(
+    useCallback(async () => {
+      const ships = await getStarships();
+      setResults(ships);
+    }, [])
+  );
 
   const changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
+  const filterResults = useCallback(() => {
+    if (searchQuery) {
+      const filtered = results.filter((result) =>
+        result.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
+      );
+      setFilteredResults(filtered);
+      localStorage.setItem('lastSearch', searchQuery);
+    } else {
+      setFilteredResults(results);
+    }
+    if (filterResults.length > 0) {
+      setHeader({ name: 'Starship name', description: 'Description' });
+    }
+  }, [results]);
+
   useEffect(() => {
     const lastSearch = localStorage.getItem('lastSearch') || '';
     setSearchQuery(lastSearch);
-    fetchItems(lastSearch);
-  }, []);
+    fetchShips();
+  }, [fetchShips]);
 
-  const fetchItems = async (query: string) => {
-    setIsLoading(true);
-
-    const response = await axios.get('https://swapi.dev/api/starships/?page=1');
-    console.log(response)
-
-    if (
-      response.status.toString().startsWith('4') ||
-      response.status.toString().startsWith('5')
-    ) {
-      setHasError(true);
-    }
-
-    const filteredResponse: ResultData[] = response.data.results.filter((obj: ResultData) =>
-      obj.name.toLowerCase().includes(query.trim().toLowerCase())
-    );
-
-    if (query === '') {
-      setResults(response.data.results);
-      setHeader({ name: 'Starship name', description: 'Description' });
-    } else {
-      if (filteredResponse.length > 0) {
-        setResults(filteredResponse);
-      } else {
-        setResults([]);
-        setHeader({ name: '', description: '' });
-      }
-      localStorage.setItem('lastSearch', query);
-    }
-    setIsLoading(false);
-  };
+  useEffect(() => {
+    filterResults();
+  }, [filterResults]);
 
   return (
     <ErrorBoundary>
@@ -77,25 +63,18 @@ const App: React.FC = () => {
           onInputChange={(e) => changeInput(e)}
           onButtonClick={(e) => {
             e.preventDefault();
-            fetchItems(searchQuery);
+            fetchShips();
+            filterResults();
           }}
         ></Controls>
-        {isLoading ? (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: '150px',
-            }}
-          >
+        {hasError ? (
+          <h1>Request error D: ${hasError}</h1>
+        ) : isLoading ? (
+          <div className="loader-container">
             <Loader />
           </div>
-        ) : hasError ? (
-          <h1>Request error D:</h1>
-        ) : results.length ? (
-          <ResultList header={header} results={results}></ResultList>
         ) : (
-          <div className="not-found-msg">No starships found</div>
+          <ResultList header={header} results={filteredResults}></ResultList>
         )}
       </div>
     </ErrorBoundary>

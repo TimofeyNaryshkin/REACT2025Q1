@@ -45,3 +45,9 @@
 .not-found-msg {
   margin-top: 50px;
 }
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 150px;
+}
