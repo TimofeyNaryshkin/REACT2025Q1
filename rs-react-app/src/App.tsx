@@ -5,7 +5,7 @@ import axios from 'axios';
 import ResultList from './components/ResultList/ResultList';
 import Loader from './components/UI/Loader/Loader';
 import ErrorBoundary from './components/ErrorBoundary';
-import { ResultData } from './types/types';
+import { HeaderInterface, ResultData } from './types/types';
 
 /* interface AppState {
   results: object[];
@@ -16,8 +16,8 @@ import { ResultData } from './types/types';
 }
  */
 const App: React.FC = () => {
-  const [results, setResults] = useState([]);
-  const [header, setHeader] = useState({
+  const [results, setResults] = useState<ResultData[]>([]);
+  const [header, setHeader] = useState<HeaderInterface>({
     name: '',
     description: '',
   });
@@ -39,6 +39,7 @@ const App: React.FC = () => {
     setIsLoading(true);
 
     const response = await axios.get('https://swapi.dev/api/starships/?page=1');
+    console.log(response)
 
     if (
       response.status.toString().startsWith('4') ||
@@ -47,7 +48,7 @@ const App: React.FC = () => {
       setHasError(true);
     }
 
-    const filteredResponse = response.data.results.filter((obj: ResultData) =>
+    const filteredResponse: ResultData[] = response.data.results.filter((obj: ResultData) =>
       obj.name.toLowerCase().includes(query.trim().toLowerCase())
     );
 

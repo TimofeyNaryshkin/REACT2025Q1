@@ -12,7 +12,7 @@ const ResultList: React.FC<ResultListProps> = ({ results, header }) => {
       </div>
       <div className={classes.content}>
         {results.map((result) => (
-          <ResultItem resultData={result} key={result.url} />
+          <ResultItem {...result} key={result.url}/>
         ))}
       </div>
     </div>

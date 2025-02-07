@@ -24,10 +24,6 @@ export interface HeaderInterface {
   description: string;
 }
 
-export interface ResultItemProps {
-  resultData: ResultData;
-}
-
 export interface ResultData {
   name: string;
   model: string;
