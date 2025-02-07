@@ -12,6 +12,7 @@ export interface ControlsProps extends SearchProps {
 export interface ButtonProps {
   children: React.ReactNode;
   onButtonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  className?: string;
 }
 
 export interface ResultListProps {
@@ -34,4 +35,10 @@ export interface ResultData {
   manufacturer: string;
   starship_class: string;
   url: string;
+}
+
+export interface PaginationProps {
+  pagesArr: number[];
+  page: number;
+  onButtonClick: (p: number) => void;
 }

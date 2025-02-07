@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Controls from './components/Controls/Controls';
 import ResultList from './components/ResultList/ResultList';
 import Loader from './components/UI/Loader/Loader';
@@ -7,6 +7,8 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { HeaderInterface, ResultData } from './types/types';
 import { useFetch } from './hooks/useFetch';
 import getStarships from './API/StarshipService';
+import countPages from './utils/pages';
+import Pagination from './components/UI/Pagination/Pagination';
 
 const App: React.FC = () => {
   const [results, setResults] = useState<ResultData[]>([]);
@@ -17,13 +19,33 @@ const App: React.FC = () => {
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredResults, setFilteredResults] = useState<ResultData[]>([]);
-
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
   const [fetchShips, isLoading, hasError] = useFetch(
-    useCallback(async () => {
-      const ships = await getStarships();
-      setResults(ships);
-    }, [])
+    useCallback(
+      async (page) => {
+        const ships = await getStarships(page);
+        setResults(ships.results);
+        const totalItems = ships.count;
+        setTotalPages(countPages(totalItems, limit));
+      },
+      []
+    )
   );
+
+  const pagesArr = useMemo(() => {
+    const arr = [];
+    for (let i = 0; i < totalPages; i++) {
+      arr.push(i + 1);
+    }
+    return arr;
+  }, [totalPages]);
+
+  const changePage = (page: number) => {
+    setPage(page);
+    fetchShips(page);
+  };
 
   const changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -44,7 +66,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const lastSearch = localStorage.getItem('lastSearch') || '';
     setSearchQuery(lastSearch);
-    fetchShips();
+    fetchShips(page);
   }, [fetchShips]);
 
   useEffect(() => {
@@ -77,7 +99,7 @@ const App: React.FC = () => {
           onInputChange={(e) => changeInput(e)}
           onButtonClick={(e) => {
             e.preventDefault();
-            fetchShips();
+            fetchShips(page);
             filterResults();
           }}
         ></Controls>
@@ -90,6 +112,11 @@ const App: React.FC = () => {
         ) : (
           <ResultList header={header} results={filteredResults}></ResultList>
         )}
+        <Pagination
+          pagesArr={pagesArr}
+          page={page}
+          onButtonClick={(p) => changePage(p)}
+        ></Pagination>
       </div>
     </ErrorBoundary>
   );
