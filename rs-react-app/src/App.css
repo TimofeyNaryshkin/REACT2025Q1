@@ -6,6 +6,11 @@
   text-align: center;
 }
 
+.app {
+  padding: 10px;
+}
+
+
 .not-found-msg {
   margin-top: 50px;
 }
