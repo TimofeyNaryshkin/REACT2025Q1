@@ -6,9 +6,9 @@ import React from 'react';
 
 describe('ResultItem', () => {
   it('should render div with name and model if provided', () => {
-    render(<ResultItem name='Star'model='Destroyer'/>);
+    render(<ResultItem name="Star" model="Destroyer" />);
 
     const item = screen.getByText('Star');
-    expect(item).toBeInTheDocument()
+    expect(item).toBeInTheDocument();
   });
 });

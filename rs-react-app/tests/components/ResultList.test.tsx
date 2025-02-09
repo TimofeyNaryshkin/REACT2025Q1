@@ -59,7 +59,7 @@ describe('ResultList', () => {
         <ResultList results={''} header={mockHeader} />
       </MemoryRouter>
     );
-    const resultList = screen.getByText('error 12345')
-    expect(resultList).toBeInTheDocument()
+    const resultList = screen.getByText('error 12345');
+    expect(resultList).toBeInTheDocument();
   });
-})
+});

@@ -8,9 +8,9 @@ export const useLastSearch = () => {
     if (lastSearch) {
       setSearchQuery(lastSearch);
     }
-  }, [])
-    
+  }, []);
+
   return [searchQuery, setSearchQuery] as const;
 };
 
-export default useLastSearch
+export default useLastSearch;

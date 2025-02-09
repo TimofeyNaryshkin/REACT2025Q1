@@ -6,9 +6,9 @@ import React from 'react';
 
 describe('Search', () => {
   it('should render input with text if has inputValue', () => {
-    render(<Search inputValue='some value'/>);
+    render(<Search inputValue="some value" />);
 
     const search = screen.getByRole('textbox');
-    expect(search).toBeInTheDocument()
+    expect(search).toBeInTheDocument();
   });
 });

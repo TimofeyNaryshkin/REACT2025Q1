@@ -6,9 +6,9 @@ import React from 'react';
 
 describe('Button', () => {
   it('should render button with text if has children', () => {
-    render(<Button children='button'/>);
+    render(<Button>button</Button>);
     screen.debug();
     const button = screen.getByRole('button');
-    expect(button).toHaveTextContent(/button/)
+    expect(button).toHaveTextContent(/button/);
   });
 });

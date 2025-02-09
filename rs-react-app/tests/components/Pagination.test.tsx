@@ -4,26 +4,26 @@ import Pagination from '../../src/components/UI/Pagination/Pagination';
 import React from 'react';
 
 vi.mock('./Button', () => ({
-  default: ({ children, onButtonClick }: { children: React.ReactNode; onButtonClick: () => void }) => (
-    <button onClick={onButtonClick}>{children}</button>
-  ),
+  default: ({
+    children,
+    onButtonClick,
+  }: {
+    children: React.ReactNode;
+    onButtonClick: () => void;
+  }) => <button onClick={onButtonClick}>{children}</button>,
 }));
 
 describe('Pagination', () => {
   test('calls onButtonClick with the correct page number', () => {
     const mockOnClick = vi.fn();
     const pagesArr = [1, 2, 3];
-    
+
     render(
-      <Pagination
-        pagesArr={pagesArr}
-        page={1}
-        onButtonClick={mockOnClick}
-      />
+      <Pagination pagesArr={pagesArr} page={1} onButtonClick={mockOnClick} />
     );
 
     fireEvent.click(screen.getByText('2'));
-    
+
     expect(mockOnClick).toHaveBeenCalledWith(2);
   });
 });

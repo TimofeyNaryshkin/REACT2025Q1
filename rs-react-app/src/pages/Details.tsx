@@ -8,8 +8,10 @@ const Details: React.FC<DetailsProps> = ({ to }) => {
   const result: ResultData = location.state;
 
   return (
-    <div className='details'>
-      <Link className='details-close' to={to}>Close</Link>
+    <div className="details">
+      <Link className="details-close" to={to}>
+        Close
+      </Link>
       <div>cost: {result.cost_in_credits}</div>
       <div>crew: {result.crew}</div>
       <div>length: {result.length}</div>
