@@ -9,6 +9,7 @@ import { HeaderInterface, ResultData } from '../types/types';
 import countPages from '../utils/pages';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Details from './Details';
+import { useLastSearch } from '../hooks/useLastSearch';
 
 const Ships: React.FC = () => {
   const [results, setResults] = useState<ResultData[]>([]);
@@ -17,9 +18,8 @@ const Ships: React.FC = () => {
     description: '',
     errorMessage: '',
   });
-  const [searchQuery, setSearchQuery] = useState('');
   const [filteredResults, setFilteredResults] = useState<ResultData[]>([]);
-  const [limit, setLimit] = useState(10);
+  const limit = 10;
   const [totalPages, setTotalPages] = useState(0);
   const [fetchShips, isLoading, hasError] = useFetch(
     useCallback(async (page) => {
@@ -29,12 +29,14 @@ const Ships: React.FC = () => {
       setTotalPages(countPages(totalItems, limit));
     }, [])
   );
+
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-
   const urlPage = Number(searchParams.get('page')) || 1;
   const details = searchParams.get('details');
+
+  const [searchQuery, setSearchQuery] = useLastSearch();
 
   const pagesArr = useMemo(() => {
     const arr = [];
@@ -72,10 +74,8 @@ const Ships: React.FC = () => {
   }, [searchParams, navigate]);
 
   useEffect(() => {
-    const lastSearch = localStorage.getItem('lastSearch') || '';
-    setSearchQuery(lastSearch);
     fetchShips(urlPage);
-  }, [fetchShips]);
+  }, [urlPage, fetchShips]);
 
   useEffect(() => {
     filterResults();
