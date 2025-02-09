@@ -1,11 +1,11 @@
 import React from 'react';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router';
-import { DetailsProps } from '../types/types';
+import { DetailsProps, ResultData } from '../types/types';
 
 const Details: React.FC<DetailsProps> = ({ to }) => {
   const location = useLocation();
-  const result = location.state;
+  const result: ResultData = location.state;
 
   return (
     <div className='details'>
