@@ -1,11 +1,26 @@
 import React from 'react';
 import ResultItem from '../ResultItem/ResultItem';
 import classes from './ResultList.module.css';
-import { ResultListProps } from '../../types/types';
-import { Link, useLocation } from 'react-router';
+import { ResultData, ResultListProps } from '../../types/types';
+import { useLocation, useNavigate } from 'react-router';
 
 const ResultList: React.FC<ResultListProps> = ({ results, header }) => {
-  const location = useLocation()
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleClick = (result: ResultData) => {
+    const searchParams = new URLSearchParams(location.search);
+    const currentDetails = searchParams.get('details');
+
+    if (currentDetails === result.name) {
+      searchParams.delete('details');
+    } else {
+      searchParams.set('details', result.name);
+    }
+
+    const to = `${location.pathname}?${searchParams.toString()}`;
+    navigate(to, { state: result });
+  };
 
   return (
     <div className={classes.list}>
@@ -15,15 +30,11 @@ const ResultList: React.FC<ResultListProps> = ({ results, header }) => {
       </div>
       <div>{header.errorMessage}</div>
       <div className={classes.content}>
-        {results.map((result) => {
-          const searchParams = new URLSearchParams(location.search);
-          searchParams.set('details', result.name);
-          const to = `${location.pathname}?${searchParams.toString()}`;
-
-          return(<Link key={result.url} to={to} state={result}>
-            <ResultItem {...result}  />
-          </Link>)
-        })}
+        {results.map((result) => (
+          <div key={result.url} onClick={() => handleClick(result)}>
+            <ResultItem {...result} />
+          </div>
+        ))}
       </div>
     </div>
   );
