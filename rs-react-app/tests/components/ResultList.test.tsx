@@ -1,11 +1,11 @@
-import { it, expect, describe, vitest } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { it, expect, describe, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import ResultList from '../../src/components/ResultList/ResultList';
 import React from 'react';
 import { MemoryRouter } from 'react-router';
 
-vitest.mock('../ResultItem/ResultItem', () => ({
+vi.mock('../ResultItem/ResultItem', () => ({
   default: ({ name }: { name: string }) => (
     <div className="result-item">{name}</div>
   ),
@@ -40,6 +40,16 @@ const mockHeader = {
   errorMessage: 'error 12345',
 };
 
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+    useLocation: () => ({ pathname: '/', search: '' }),
+  };
+});
+
 describe('ResultList', () => {
   it('should render the specified number of cards', () => {
     render(
@@ -50,9 +60,7 @@ describe('ResultList', () => {
     const resultItems = screen.getAllByText('model: Model');
     expect(resultItems).toHaveLength(mockResults.length);
   });
-});
 
-describe('ResultList', () => {
   it('should display an appropriate message if no cards are present', () => {
     render(
       <MemoryRouter>
@@ -61,5 +69,18 @@ describe('ResultList', () => {
     );
     const resultList = screen.getByText('error 12345');
     expect(resultList).toBeInTheDocument();
+  });
+
+  it('updates the URL when clicking on a result item', () => {
+    render(
+      <MemoryRouter>
+        <ResultList results={mockResults} header={mockHeader} />
+      </MemoryRouter>
+    );
+
+    const item = screen.getByText('Ship 1');
+    fireEvent.click(item);
+
+    expect(mockNavigate).toHaveBeenCalled();
   });
 });

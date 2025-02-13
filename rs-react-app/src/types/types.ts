@@ -35,6 +35,7 @@ export interface ResultData {
   manufacturer: string;
   starship_class: string;
   url: string;
+  onClick?: () => void;
 }
 
 export interface PaginationProps {

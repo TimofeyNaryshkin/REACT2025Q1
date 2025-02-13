@@ -31,9 +31,7 @@ const ResultList: React.FC<ResultListProps> = ({ results, header }) => {
       <div className={classes.content}>
         {results ? (
           results.map((result) => (
-            <div key={result.url} onClick={() => handleClick(result)}>
-              <ResultItem {...result} />
-            </div>
+            <ResultItem key={result.url} {...result} onClick={() => handleClick(result)} />
           ))
         ) : (
           <div>{header.errorMessage}</div>

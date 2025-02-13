@@ -8,7 +8,7 @@ describe('Search', () => {
   it('should render input with text if has inputValue', () => {
     render(<Search inputValue="some value" />);
 
-    const search = screen.getByRole('textbox');
+    const search = screen.getByDisplayValue(/some value/i);
     expect(search).toBeInTheDocument();
   });
 });
