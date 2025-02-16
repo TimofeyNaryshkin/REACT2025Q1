@@ -3,8 +3,11 @@ import ResultItem from '../ResultItem/ResultItem';
 import classes from './ResultList.module.css';
 import { ResultData, ResultListProps } from '../../types/types';
 import { useLocation, useNavigate } from 'react-router';
+import { starshipAPI } from '../../services/starship';
 
 const ResultList: React.FC<ResultListProps> = ({ results, header }) => {
+  const { data: response } = starshipAPI.useFetchAllShipsQuery();
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -21,6 +24,21 @@ const ResultList: React.FC<ResultListProps> = ({ results, header }) => {
     const to = `${location.pathname}?${searchParams.toString()}`;
     navigate(to, { state: result });
   };
+  return (
+    <>
+      {response && (
+        <div className={classes.content}>
+          {response.results.map((result) => (
+            <ResultItem key={result.url}
+              name={result.name}
+              model={result.model}
+              onClick={() => handleClick(result)}
+            />
+          ))}
+        </div>
+      )}
+    </>
+  );
 
   return (
     <div className={classes.list}>
@@ -31,7 +49,11 @@ const ResultList: React.FC<ResultListProps> = ({ results, header }) => {
       <div className={classes.content}>
         {results ? (
           results.map((result) => (
-            <ResultItem key={result.url} {...result} onClick={() => handleClick(result)} />
+            <ResultItem
+              key={result.url}
+              {...result}
+              onClick={() => handleClick(result)}
+            />
           ))
         ) : (
           <div>{header.errorMessage}</div>

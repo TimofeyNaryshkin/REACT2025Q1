@@ -29,12 +29,12 @@ export interface HeaderInterface {
 export interface ResultData {
   name: string;
   model: string;
-  cost_in_credits: string;
+  /* cost_in_credits: string;
   crew: string;
   length: string;
   manufacturer: string;
   starship_class: string;
-  url: string;
+  url: string; */
   onClick?: () => void;
 }
 
