@@ -9,19 +9,19 @@ const Details: React.FC<DetailsProps> = ({
   isOpened,
   onButtonClick,
 }) => {
-  /* const location = useLocation();
-  const result = location.state as ResultData | undefined; */
   const {
     data: ship,
-    isLoading,
+    isFetching,
     error,
   } = starshipAPI.useFetchShipDetailsQuery(shipPath);
 
   return (
     <div className="details">
-      {isLoading || !ship ? <Loader /> : null}
-      {error && <h2>Cant find details</h2>}
-      {ship && isOpened && (
+      {error ? (
+        <h2>Cant find details</h2>
+      ) : isFetching ? (
+        <Loader />
+      ) : ship && isOpened ? (
         <>
           <Button className="details-close" onButtonClick={onButtonClick}>
             Close
@@ -32,7 +32,7 @@ const Details: React.FC<DetailsProps> = ({
           <div>{`manufacturer: ${ship.manufacturer}`}</div>
           <div>{`class: ${ship.starship_class}`}</div>
         </>
-      )}
+      ) : null}
     </div>
   );
 };

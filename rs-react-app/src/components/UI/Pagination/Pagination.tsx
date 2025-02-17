@@ -4,33 +4,27 @@ import { starshipAPI } from '../../../services/starship';
 import countPages from '../../../utils/pages';
 import { useNavigate, useSearchParams } from 'react-router';
 
-const Pagination: React.FC /* <PaginationProps> */ = (
-  {
-    /* pagesArr,
-  page,
-  onButtonClick, */
-  }
-) => {
-  const { data } = starshipAPI.useFetchAllShipsQuery();
-
+const Pagination: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get('page') || '1';
+
   const navigate = useNavigate();
+  const { data } = starshipAPI.useFetchShipsPageQuery(page);
 
   const [totalPages, setTotalPages] = useState(0);
-  const totalItems = data ? +data.count : 0;
   const limit = 10;
-  const urlPage = Number(searchParams.get('page')) || 1;
-  setTotalPages(countPages(totalItems, limit));
+
+  useEffect(() => {
+    const totalItems = data ? +data.count : 0;
+    setTotalPages(countPages(totalItems, limit));
+  }, [data]);
 
   useEffect(() => {
     if (!searchParams.has('page')) {
       navigate('/?page=1', { replace: true });
+    } else {
     }
-  }, [searchParams, navigate]);
-
-  useEffect(() => {
-    setSearchParams({page: urlPage.toString()})
-  }, [urlPage])
+  }, []);
 
   const pagesArr = useMemo(() => {
     const arr = [];
@@ -40,16 +34,12 @@ const Pagination: React.FC /* <PaginationProps> */ = (
     return arr;
   }, [totalPages]);
 
-  /* useEffect(() => {
-    fetchShips(urlPage);
-  }, [urlPage, fetchShips]); */
-
   return (
     <div className="page-container">
       {pagesArr.map((p, i) => (
         <Button
           key={i + 1}
-          className={urlPage === p ? 'page page_current' : 'page'}
+          className={page && +page === p ? 'page page_current' : 'page'}
           onButtonClick={() => setSearchParams({ page: p.toString() })}
         >
           {p}

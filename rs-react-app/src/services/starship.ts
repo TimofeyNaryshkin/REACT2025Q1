@@ -5,11 +5,11 @@ export const starshipAPI = createApi({
   reducerPath: 'starshipAPI',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://swapi.dev/api/' }),
   endpoints: (build) => ({
-    fetchAllShips: build.query<IResponse, void>({
-      query: () => 'starships/',
-    }),
     fetchShipDetails: build.query<Result, string>({
       query: (ship) => `starships/${ship}`,
+    }),
+    fetchShipsPage: build.query<IResponse, string | null>({
+      query: (page) => `starships/?page=${page}`,
     }),
   }),
 });
