@@ -1,10 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Button from '../Button';
 import { starshipAPI } from '../../../services/starship';
 import countPages from '../../../utils/pages';
 import { useNavigate, useSearchParams } from 'react-router';
+import { useAppDispatch } from '../../../hooks/redux';
+import { detailsSlice } from '../../../store/reducers/DetailsSlice';
 
 const Pagination: React.FC = () => {
+  const {toggle} = detailsSlice.actions
+  const dispatch = useAppDispatch()
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get('page') || '1';
 
@@ -34,13 +38,18 @@ const Pagination: React.FC = () => {
     return arr;
   }, [totalPages]);
 
+  const changePage = useCallback((p: number) => {
+    setSearchParams({ page: p.toString() })
+    dispatch(toggle(false))
+  }, [])
+
   return (
     <div className="page-container">
       {pagesArr.map((p, i) => (
         <Button
           key={i + 1}
           className={page && +page === p ? 'page page_current' : 'page'}
-          onButtonClick={() => setSearchParams({ page: p.toString() })}
+          onButtonClick={() => changePage(p)}
         >
           {p}
         </Button>

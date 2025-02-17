@@ -3,12 +3,13 @@ import { DetailsProps } from '../types/types';
 import { starshipAPI } from '../services/starship';
 import Loader from '../components/UI/Loader/Loader';
 import Button from '../components/UI/Button';
+import { useAppSelector } from '../hooks/redux';
 
 const Details: React.FC<DetailsProps> = ({
   shipPath,
-  isOpened,
   onButtonClick,
 }) => {
+  const {isOpened} = useAppSelector(state => state.detailsReducer)
   const {
     data: ship,
     isFetching,

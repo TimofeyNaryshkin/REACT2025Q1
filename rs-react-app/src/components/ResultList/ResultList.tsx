@@ -6,6 +6,8 @@ import { starshipAPI } from '../../services/starship';
 import Loader from '../UI/Loader/Loader';
 import { Result } from '../../types/response';
 import Details from '../../pages/Details';
+import { detailsSlice } from '../../store/reducers/DetailsSlice';
+import { useAppDispatch } from '../../hooks/redux';
 
 const ResultList: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -13,8 +15,9 @@ const ResultList: React.FC = () => {
   const navigate = useNavigate();
   const urlPage = searchParams.get('page') || '1';
 
+  const { toggle } = detailsSlice.actions;
+  const dispatch = useAppDispatch();
   const [shipPath, setShipPath] = useState('');
-  const [isOpened, setIsOpened] = useState(true);
   const { data, isFetching, error } =
     starshipAPI.useFetchShipsPageQuery(urlPage);
 
@@ -25,21 +28,21 @@ const ResultList: React.FC = () => {
       : '';
     navigate(`?${to}`);
 
-    setIsOpened(false);
+    dispatch(toggle(false));
   };
 
   const handleClick = (ship: Result) => {
     setShipPath(ship.url.slice(ship.url.search(/\d+/)));
-    setIsOpened(true);
 
     const searchParams = new URLSearchParams(location.search);
     const currentDetails = searchParams.get('details');
 
     if (currentDetails === ship.name) {
       searchParams.delete('details');
-      setIsOpened(false);
+      dispatch(toggle(false));
     } else {
       searchParams.set('details', ship.name);
+      dispatch(toggle(true));
     }
     const to = `${location.pathname}?${searchParams.toString()}`;
     navigate(to);
@@ -70,13 +73,7 @@ const ResultList: React.FC = () => {
           </>
         ) : null}
       </div>
-      {shipPath && (
-        <Details
-          shipPath={shipPath}
-          isOpened={isOpened}
-          onButtonClick={closeDetails}
-        />
-      )}
+      {shipPath && <Details shipPath={shipPath} onButtonClick={closeDetails} />}
     </div>
   );
 };

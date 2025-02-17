@@ -47,6 +47,5 @@ export interface PaginationProps {
 
 export interface DetailsProps {
   shipPath: string;
-  isOpened: boolean;
   onButtonClick: () => void;
 }
