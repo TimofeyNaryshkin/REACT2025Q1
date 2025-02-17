@@ -5,7 +5,7 @@ export interface IResponse {
   results: Result[];
 }
 
-interface Result {
+export interface Result {
   name: string;
   model: string;
   manufacturer: string;

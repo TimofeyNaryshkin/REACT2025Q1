@@ -1,26 +1,38 @@
 import React from 'react';
-import { useLocation } from 'react-router';
-import { Link } from 'react-router';
-import { DetailsProps, ResultData } from '../types/types';
+import { DetailsProps } from '../types/types';
+import { starshipAPI } from '../services/starship';
+import Loader from '../components/UI/Loader/Loader';
+import Button from '../components/UI/Button';
 
-const Details: React.FC<DetailsProps> = ({ to }) => {
-  const location = useLocation();
-  const result = location.state as ResultData | undefined;
-
-  if (!result) {
-    return <h2>No data available</h2>;
-  }
+const Details: React.FC<DetailsProps> = ({
+  shipPath,
+  isOpened,
+  onButtonClick,
+}) => {
+  /* const location = useLocation();
+  const result = location.state as ResultData | undefined; */
+  const {
+    data: ship,
+    isLoading,
+    error,
+  } = starshipAPI.useFetchShipDetailsQuery(shipPath);
 
   return (
     <div className="details">
-      <Link className="details-close" to={to}>
-        Close
-      </Link>
-      <div>{`cost: ${result.cost_in_credits}`}</div>
-      <div>{`crew: ${result.crew}`}</div>
-      <div>{`length: ${result.length}`}</div>
-      <div>{`manufacturer: ${result.manufacturer}`}</div>
-      <div>{`class: ${result.starship_class}`}</div>
+      {isLoading || !ship ? <Loader /> : null}
+      {error && <h2>Cant find details</h2>}
+      {ship && isOpened && (
+        <>
+          <Button className="details-close" onButtonClick={onButtonClick}>
+            Close
+          </Button>
+          <div>{`cost: ${ship.cost_in_credits}`}</div>
+          <div>{`crew: ${ship.crew}`}</div>
+          <div>{`length: ${ship.length}`}</div>
+          <div>{`manufacturer: ${ship.manufacturer}`}</div>
+          <div>{`class: ${ship.starship_class}`}</div>
+        </>
+      )}
     </div>
   );
 };

@@ -1,46 +1,81 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ResultItem from '../ResultItem/ResultItem';
 import classes from './ResultList.module.css';
-import { ResultData, ResultListProps } from '../../types/types';
 import { useLocation, useNavigate } from 'react-router';
 import { starshipAPI } from '../../services/starship';
+import Loader from '../UI/Loader/Loader';
+import { Result } from '../../types/response';
+import Details from '../../pages/Details';
 
-const ResultList: React.FC<ResultListProps> = ({ results, header }) => {
-  const { data: response } = starshipAPI.useFetchAllShipsQuery();
+const ResultList: React.FC = (
 
-  const location = useLocation();
+) => {
+  const [shipPath, setShipPath] = useState('');
+  const [isOpened, setIsOpened] = useState(true);
+  const { data, isLoading, error } = starshipAPI.useFetchAllShipsQuery();
+
+  const location = useLocation()
   const navigate = useNavigate();
 
-  const handleClick = (result: ResultData) => {
+  const closeDetails = () => {
+    const searchParams = new URLSearchParams(location.search).toString();
+    const to = searchParams.slice(0, searchParams.indexOf('&'));
+    navigate(`?${to}`);
+
+    setIsOpened(false);
+  };
+
+  const handleClick = (ship: Result) => {
+    setShipPath(ship.url.slice(ship.url.search(/\d+/)));
+    setIsOpened(true);
+
     const searchParams = new URLSearchParams(location.search);
     const currentDetails = searchParams.get('details');
 
-    if (currentDetails === result.name) {
+    if (currentDetails === ship.name) {
       searchParams.delete('details');
+      setIsOpened(false);
     } else {
-      searchParams.set('details', result.name);
+      searchParams.set('details', ship.name);
     }
-
     const to = `${location.pathname}?${searchParams.toString()}`;
-    navigate(to, { state: result });
+    navigate(to);
   };
   return (
-    <>
-      {response && (
-        <div className={classes.content}>
-          {response.results.map((result) => (
-            <ResultItem key={result.url}
-              name={result.name}
-              model={result.model}
-              onClick={() => handleClick(result)}
-            />
-          ))}
-        </div>
+    <div className="result-container">
+      <div className={classes.list}>
+        {isLoading && <Loader />}
+        {error && <h1>Some error</h1>}
+        {data && (
+          <>
+            <div className={classes.header}>
+              <div>Name</div>
+              <div>Description</div>
+            </div>
+            <div className={classes.content}>
+              {data.results.map((result) => (
+                <ResultItem
+                  key={result.url}
+                  name={result.name}
+                  model={result.model}
+                  onClick={() => handleClick(result)}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+      {shipPath && (
+        <Details
+          shipPath={shipPath}
+          isOpened={isOpened}
+          onButtonClick={closeDetails}
+        />
       )}
-    </>
+    </div>
   );
 
-  return (
+  /* return (
     <div className={classes.list}>
       <div className={classes.header}>
         <div>{header.name}</div>
@@ -60,7 +95,7 @@ const ResultList: React.FC<ResultListProps> = ({ results, header }) => {
         )}
       </div>
     </div>
-  );
+  ); */
 };
 
 export default ResultList;
