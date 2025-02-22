@@ -7,8 +7,8 @@ import { useAppDispatch } from '../../../hooks/redux';
 import { detailsSlice } from '../../../store/reducers/DetailsSlice';
 
 const Pagination: React.FC = () => {
-  const {toggle} = detailsSlice.actions
-  const dispatch = useAppDispatch()
+  const { toggle } = detailsSlice.actions;
+  const dispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get('page') || '1';
 
@@ -26,9 +26,8 @@ const Pagination: React.FC = () => {
   useEffect(() => {
     if (!searchParams.has('page')) {
       navigate('/?page=1', { replace: true });
-    } else {
     }
-  }, []);
+  }, [navigate, searchParams]);
 
   const pagesArr = useMemo(() => {
     const arr = [];
@@ -38,10 +37,13 @@ const Pagination: React.FC = () => {
     return arr;
   }, [totalPages]);
 
-  const changePage = useCallback((p: number) => {
-    setSearchParams({ page: p.toString() })
-    dispatch(toggle(false))
-  }, [])
+  const changePage = useCallback(
+    (p: number) => {
+      setSearchParams({ page: p.toString() });
+      dispatch(toggle(false));
+    },
+    [dispatch, setSearchParams, toggle]
+  );
 
   return (
     <div className="page-container">

@@ -1,4 +1,4 @@
-import { it, describe, expect, vitest } from 'vitest';
+import { it, describe, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import Details from '../../src/pages/Details';
@@ -32,13 +32,10 @@ describe('Details', () => {
     ).toBeInTheDocument();
     expect(screen.getByText(/Starfighter/i)).toBeInTheDocument();
   });
- 
 
   it('should display error if location.state is missing', () => {
     render(
-      <MemoryRouter
-        initialEntries={[{ pathname: '/details' }]}
-      >
+      <MemoryRouter initialEntries={[{ pathname: '/details' }]}>
         <Details to={'/'} />
       </MemoryRouter>
     );

@@ -3,7 +3,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import ResultItem from '../../src/components/ResultItem/ResultItem';
 import React from 'react';
-import { MemoryRouter } from 'react-router';
 
 describe('ResultItem', () => {
   const mockOnClick = vi.fn();
@@ -17,13 +16,11 @@ describe('ResultItem', () => {
   });
 
   it('should invoke click handle functin on resut item click', () => {
-    render(
-      <ResultItem name="Star" model="Destroyer" onClick={mockOnClick}/>
-    );
+    render(<ResultItem name="Star" model="Destroyer" onClick={mockOnClick} />);
 
-    screen.debug()
-    const item = screen.getByText(/Star/i)
-    fireEvent.click(item)
-    expect(mockOnClick).toBeCalled()
+    screen.debug();
+    const item = screen.getByText(/Star/i);
+    fireEvent.click(item);
+    expect(mockOnClick).toBeCalled();
   });
 });

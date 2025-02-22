@@ -1,4 +1,3 @@
-
 export interface SearchProps {
   inputType: string;
   inputPlaceholder: string;

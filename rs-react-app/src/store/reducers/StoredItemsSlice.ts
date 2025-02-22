@@ -24,8 +24,8 @@ export const storedItemsSlice = createSlice({
       }
     },
     unselectAll(state, action: PayloadAction<[]>) {
-      state.items = action.payload
-    }
+      state.items = action.payload;
+    },
   },
 });
 

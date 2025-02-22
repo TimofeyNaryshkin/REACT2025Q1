@@ -3,9 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import Ships from '../../src/pages/Ships';
 import React from 'react';
-import {
-  MemoryRouter
-} from 'react-router';
+import { MemoryRouter } from 'react-router';
 
 const mockResults = [
   {
@@ -54,8 +52,8 @@ describe('Ships', () => {
     useFetch.mockReturnValue([vi.fn(), false, null]);
     useLastSearch.mockReturnValue(['', vi.fn()]);
 
-    useState.mockImplementationOnce((initial) => [[], mockSetHeader]);
-    useState.mockImplementationOnce((initial) => [
+    useState.mockImplementationOnce(() => [[], mockSetHeader]);
+    useState.mockImplementationOnce(() => [
       {
         name: '',
         description: '',
@@ -64,8 +62,8 @@ describe('Ships', () => {
       mockSetResults,
     ]);
   });
-    useState.mockImplementationOnce((initial) => [mockResults, mockSetFilteredResults]);
-    useState.mockImplementationOnce((initial) => [0, mockSetTotalPages]);
+  useState.mockImplementationOnce(() => [mockResults, mockSetFilteredResults]);
+  useState.mockImplementationOnce(() => [0, mockSetTotalPages]);
 
   afterEach(() => {
     vi.clearAllMocks();
@@ -81,15 +79,13 @@ describe('Ships', () => {
     const searchBtn = screen.getByText(/search/i);
     const errBtn = screen.getByText(/throw error/i);
     const searchInput = screen.getByPlaceholderText(/starship name/i);
-    
 
-    screen.debug()
+    screen.debug();
 
     await waitFor(() => {
       expect(searchBtn).toBeInTheDocument();
       expect(errBtn).toBeInTheDocument();
       expect(searchInput).toBeInTheDocument();
-
     });
   });
 });

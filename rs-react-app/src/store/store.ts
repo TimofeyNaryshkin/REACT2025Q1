@@ -1,8 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { starshipAPI } from '../services/starship';
-import detailsReducer from './reducers/DetailsSlice'
-import storedItemsReducer from './reducers/StoredItemsSlice'
-
+import detailsReducer from './reducers/DetailsSlice';
+import storedItemsReducer from './reducers/StoredItemsSlice';
 
 const rootReducer = combineReducers({
   detailsReducer,
@@ -13,8 +12,8 @@ const rootReducer = combineReducers({
 export const setupStore = () => {
   return configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => 
-      getDefaultMiddleware().concat(starshipAPI.middleware)
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(starshipAPI.middleware),
   });
 };
 

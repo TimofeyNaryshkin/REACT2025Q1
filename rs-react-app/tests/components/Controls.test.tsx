@@ -15,7 +15,7 @@ vi.mock('../../src/components/UI/Button', () => ({
     onButtonClick,
     children,
   }: {
-    onButtonClick: any;
+    onButtonClick: () => void;
     children: string;
   }) => <button onClick={onButtonClick}>{children}</button>,
 }));

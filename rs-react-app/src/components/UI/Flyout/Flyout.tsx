@@ -13,9 +13,7 @@ const Flyout: React.FC = () => {
   const convertToCsv = (arr: Result[]) => {
     const csvHeaders = Object.keys(arr[0]);
     const csvRows = [...arr].map((item) => Object.values(item));
-    const csvArr = [csvHeaders, csvRows]
-      .map((arr) => arr.join(','))
-      .join('\n');
+    const csvArr = [csvHeaders, csvRows].map((arr) => arr.join(',')).join('\n');
     return [csvArr];
   };
 
