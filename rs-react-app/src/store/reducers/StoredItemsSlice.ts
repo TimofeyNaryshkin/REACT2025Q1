@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ResultData } from '../../types/types';
+import { Result } from '../../types/response';
 
 interface StoredItemsSlice {
-  items: ResultData[];
+  items: Result[];
 }
 
 const initialState: StoredItemsSlice = {
@@ -13,7 +13,7 @@ export const storedItemsSlice = createSlice({
   name: 'storedItems',
   initialState,
   reducers: {
-    toggleItem(state, action: PayloadAction<ResultData>) {
+    toggleItem(state, action: PayloadAction<Result>) {
       const index = state.items.findIndex(
         (item) => item.url === action.payload.url
       );
@@ -23,6 +23,9 @@ export const storedItemsSlice = createSlice({
         state.items.push(action.payload);
       }
     },
+    unselectAll(state, action: PayloadAction<[]>) {
+      state.items = action.payload
+    }
   },
 });
 

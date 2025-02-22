@@ -17,8 +17,8 @@ const ResultItem: React.FC<resultItemProps> = ({ result, onClick }) => {
         <div>model: {result.model}</div>
       </div>
       <input
-        onClick={(e) => {
-          e.stopPropagation();
+        onClick={(e) => e.stopPropagation()}
+        onChange={() => {
           dispatch(toggleItem(result));
         }}
         className={classes.checkbox}

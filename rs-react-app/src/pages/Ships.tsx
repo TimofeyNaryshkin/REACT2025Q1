@@ -4,6 +4,7 @@ import Pagination from '../components/UI/Pagination/Pagination';
 import { ResultData } from '../types/types';
 import React, { useState } from 'react';
 import { useLastSearch } from '../hooks/useLastSearch';
+import Flyout from '../components/UI/Flyout/Flyout';
 
 const Ships: React.FC = () => {
   const [filteredResults, setFilteredResults] = useState<ResultData[]>([]);
@@ -14,7 +15,7 @@ const Ships: React.FC = () => {
     setSearchQuery(e.target.value);
   };
 
- /*  const filterResults = useCallback(() => {
+  /*  const filterResults = useCallback(() => {
     if (searchQuery) {
       const filtered = results.filter((result) =>
         result.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
@@ -37,9 +38,9 @@ const Ships: React.FC = () => {
           e.preventDefault();
         }}
       ></Controls>
-      <ResultList/>
-      <Pagination
-      />
+      <ResultList />
+      <Pagination />
+      <Flyout />
     </div>
   );
 };
