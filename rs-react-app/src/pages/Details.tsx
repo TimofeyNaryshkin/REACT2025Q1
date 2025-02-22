@@ -5,11 +5,8 @@ import Loader from '../components/UI/Loader/Loader';
 import Button from '../components/UI/Button';
 import { useAppSelector } from '../hooks/redux';
 
-const Details: React.FC<DetailsProps> = ({
-  shipPath,
-  onButtonClick,
-}) => {
-  const {isOpened} = useAppSelector(state => state.detailsReducer)
+const Details: React.FC<DetailsProps> = ({ shipPath, onButtonClick }) => {
+  const { isOpened } = useAppSelector((state) => state.detailsReducer);
   const {
     data: ship,
     isFetching,

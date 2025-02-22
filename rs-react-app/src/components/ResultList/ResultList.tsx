@@ -64,8 +64,7 @@ const ResultList: React.FC = () => {
               {data.results.map((result) => (
                 <ResultItem
                   key={result.url}
-                  name={result.name}
-                  model={result.model}
+                  result={result}
                   onClick={() => handleClick(result)}
                 />
               ))}

@@ -1,10 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { starshipAPI } from '../services/starship';
 import detailsReducer from './reducers/DetailsSlice'
+import storedItemsReducer from './reducers/StoredItemsSlice'
 
 
 const rootReducer = combineReducers({
   detailsReducer,
+  storedItemsReducer,
   [starshipAPI.reducerPath]: starshipAPI.reducer,
 });
 

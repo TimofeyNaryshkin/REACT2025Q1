@@ -1,4 +1,3 @@
-import { useNavigate, useSearchParams } from 'react-router';
 import Controls from '../components/Controls/Controls';
 import ResultList from '../components/ResultList/ResultList';
 import Pagination from '../components/UI/Pagination/Pagination';
