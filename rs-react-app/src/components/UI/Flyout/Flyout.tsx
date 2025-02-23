@@ -34,6 +34,7 @@ const Flyout: React.FC = () => {
 
   return (
     <div
+      data-idtest="flyout"
       className={`${classes.flyout} ${storedItems.length ? classes.open : ''} ${darkTheme ? classes.theme_dark : ''}`.trim()}
     >
       <p>{`${storedItems.length} ${storedItems.length > 1 ? 'starships are selected' : 'starship is selected'}`}</p>

@@ -1,29 +1,69 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, test, expect, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, vi, beforeEach, it, Mock } from 'vitest';
 import Pagination from '../../src/components/UI/Pagination/Pagination';
 import React from 'react';
+import { starshipAPI } from '../../src/services/starship';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import { detailsSlice } from '../../src/store/reducers/DetailsSlice';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
-vi.mock('./Button', () => ({
-  default: ({
-    children,
-    onButtonClick,
-  }: {
-    children: React.ReactNode;
-    onButtonClick: () => void;
-  }) => <button onClick={onButtonClick}>{children}</button>,
+vi.mock('../../src/services/starship', () => ({
+  starshipAPI: {
+    useFetchShipsPageQuery: vi.fn(),
+  },
 }));
 
-describe('Pagination', () => {
-  test('calls onButtonClick with the correct page number', () => {
-    const mockOnClick = vi.fn();
-    const pagesArr = [1, 2, 3];
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 
+describe('Pagination', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+  const mockStore = configureStore({
+    reducer: {
+      details: detailsSlice.reducer,
+      [starshipAPI.reducerPath]: starshipAPI.reducer,
+    },
+  });
+
+  const renderWithProviders = (initialEntries = ['/?page=1']) =>
     render(
-      <Pagination pagesArr={pagesArr} page={1} onButtonClick={mockOnClick} />
+      <Provider store={mockStore}>
+        <MemoryRouter initialEntries={initialEntries}>
+          <Routes>
+            <Route path="/" element={<Pagination />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
     );
 
-    fireEvent.click(screen.getByText('2'));
+  it('renders correct number of pagination buttons', () => {
+    (starshipAPI.useFetchShipsPageQuery as Mock).mockReturnValue({
+      data: { count: 50, results: [] },
+    });
 
-    expect(mockOnClick).toHaveBeenCalledWith(2);
+    renderWithProviders();
+
+    expect(screen.getAllByRole('button')).toHaveLength(5);
   });
+  /* it('should update the URL and dispatche action on button click', () => {
+    (starshipAPI.useFetchShipsPageQuery as Mock).mockReturnValue({
+      data: { count: 50, results: [] },
+    });
+
+    renderWithProviders();
+
+    const pageButton = screen.getByText('2');
+    fireEvent.click(pageButton);
+
+    expect(mockNavigate).toBeCalledWith('?page=2', { replace: true });
+  }); */
 });

@@ -21,8 +21,7 @@ const ResultList: React.FC = () => {
   const searchQuery = useAppSelector(
     (state) => state.filterReducer.searchQuery
   );
-  /* const { data, isFetching, error } =
-    starshipAPI.useFetchShipsPageQuery(urlPage); */
+
   const { filteredResults, isFetching, error } =
     starshipAPI.useFetchShipsPageQuery(urlPage, {
       selectFromResult: ({ data, isFetching, error }) => ({
