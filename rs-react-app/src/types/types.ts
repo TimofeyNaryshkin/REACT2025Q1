@@ -1,8 +1,6 @@
 export interface SearchProps {
-  inputType: string;
-  inputPlaceholder: string;
-  inputValue: string;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface ControlsProps extends SearchProps {

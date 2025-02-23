@@ -1,18 +1,12 @@
 import React from 'react';
 import { SearchProps } from '../../types/types';
-import useLastSearch from '../../hooks/useLastSearch';
 
-const Search: React.FC<SearchProps> = () => {
-  const [searchQuery, setSearchQuery] = useLastSearch();
-  const changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
+const Search: React.FC<SearchProps> = ({value, onChange}) => {
   return (
     <input
       name="Search"
-      value={searchQuery}
-      onChange={changeInput}
+      value={value}
+      onChange={onChange}
       type="text"
       placeholder="Starship name"
     />
@@ -20,11 +14,3 @@ const Search: React.FC<SearchProps> = () => {
 };
 
 export default Search;
-
-/* inputType="text"
-        inputPlaceholder="Starship name"
-        inputValue={searchQuery}
-        onInputChange={(e) => changeInput(e)}
-        onButtonClick={(e) => {
-          e.preventDefault();
-        }} */

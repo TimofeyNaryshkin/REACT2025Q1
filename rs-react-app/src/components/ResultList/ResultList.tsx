@@ -7,7 +7,7 @@ import Loader from '../UI/Loader/Loader';
 import { Result } from '../../types/response';
 import Details from '../../pages/Details';
 import { detailsSlice } from '../../store/reducers/DetailsSlice';
-import { useAppDispatch } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 
 const ResultList: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -18,8 +18,22 @@ const ResultList: React.FC = () => {
   const { toggle } = detailsSlice.actions;
   const dispatch = useAppDispatch();
   const [shipPath, setShipPath] = useState('');
-  const { data, isFetching, error } =
-    starshipAPI.useFetchShipsPageQuery(urlPage);
+  const searchQuery = useAppSelector(
+    (state) => state.filterReducer.searchQuery
+  );
+  /* const { data, isFetching, error } =
+    starshipAPI.useFetchShipsPageQuery(urlPage); */
+  const { filteredResults, isFetching, error } =
+    starshipAPI.useFetchShipsPageQuery(urlPage, {
+      selectFromResult: ({ data, isFetching, error }) => ({
+        filteredResults:
+          data?.results.filter((ship) =>
+            ship.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
+          ) || [],
+        isFetching,
+        error,
+      }),
+    });
 
   const closeDetails = () => {
     const searchParams = new URLSearchParams(location.search).toString();
@@ -54,14 +68,14 @@ const ResultList: React.FC = () => {
           <h1>Some error</h1>
         ) : isFetching ? (
           <Loader />
-        ) : data ? (
+        ) : filteredResults.length ? (
           <>
             <div className={classes.header}>
               <div>Name</div>
               <div>Description</div>
             </div>
             <div className={classes.content}>
-              {data.results.map((result) => (
+              {filteredResults.map((result) => (
                 <ResultItem
                   key={result.url}
                   result={result}
@@ -70,7 +84,7 @@ const ResultList: React.FC = () => {
               ))}
             </div>
           </>
-        ) : null}
+        ) : <h2>Nothing found D:</h2>}
       </div>
       {shipPath && <Details shipPath={shipPath} onButtonClick={closeDetails} />}
     </div>
