@@ -16,3 +16,8 @@
 .open {
   right: 10px;
 }
+
+.theme_dark {
+  background-color: #c8acd6;
+  color: #433d8b;
+}

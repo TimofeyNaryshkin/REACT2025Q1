@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
 import Button from '../Button';
 import { storedItemsSlice } from '../../../store/reducers/StoredItemsSlice';
 import { Result } from '../../../types/response';
+import { useTheme } from '../../../hooks/useTheme';
 
 const Flyout: React.FC = () => {
   const storedItems = useAppSelector((state) => state.storedItemsReducer.items);
@@ -29,9 +30,11 @@ const Flyout: React.FC = () => {
     link.remove();
   };
 
+  const darkTheme = useTheme();
+
   return (
     <div
-      className={`${classes.flyout} ${storedItems.length ? classes.open : ''}`}
+      className={`${classes.flyout} ${storedItems.length ? classes.open : ''} ${darkTheme ? classes.theme_dark : ''}`.trim()}
     >
       <p>{`${storedItems.length} ${storedItems.length > 1 ? 'starships are selected' : 'starship is selected'}`}</p>
       <Button onButtonClick={() => dispatch(unselectAll([]))}>
