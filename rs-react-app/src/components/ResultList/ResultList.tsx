@@ -84,7 +84,9 @@ const ResultList: React.FC = () => {
               ))}
             </div>
           </>
-        ) : <h2>Nothing found D:</h2>}
+        ) : (
+          <h2>Nothing found D:</h2>
+        )}
       </div>
       {shipPath && <Details shipPath={shipPath} onButtonClick={closeDetails} />}
     </div>
