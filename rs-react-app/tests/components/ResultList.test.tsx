@@ -6,33 +6,56 @@ import { MemoryRouter } from 'react-router';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import filterReducer from '../../src/store/reducers/FilterSlice';
-import { useAppDispatch, useAppSelector } from '../../src/hooks/redux';
+import { useAppDispatch } from '../../src/hooks/redux';
 import ResultList from '../../src/components/ResultList/ResultList';
-import { setupStore } from '../../src/store/store';
+import { RootState } from '../../src/store/store';
 import { starshipAPI } from '../../src/services/starship';
+import { toggle } from '../../src/store/reducers/DetailsSlice';
+
+const mockNavigate = vi.fn();
+const mockDispatch = vi.fn();
+
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+    useLocation: () => location,
+    useSearchParams: () => [new URLSearchParams('page=1')],
+  };
+});
 
 vi.mock('../../src/services/starship', () => ({
   starshipAPI: {
-    useFetchShipsPageQuery: vi.fn(),
+    useFetchShipsPageQuery: vi.fn(() => ({
+      data: mockResults,
+      isFetching: false,
+      error: null,
+    })),
+    useFetchShipDetailsQuery: vi.fn(() => ({
+      data: { name: 'Millennium Falcon', model: 'YT-1300' },
+      isFetching: false,
+      error: null,
+    })),
   },
 }));
 
 vi.mock('../../src/hooks/redux', () => ({
   useAppSelector: vi.fn(),
-  useAppDispatch: vi.fn(),
+  useAppDispatch: vi.fn(() => vi.fn()),
 }));
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useNavigate: vi.fn(),
-    useLocation: vi.fn(() => ({ pathname: '/', search: '?page=1' })),
-    useSearchParams: vi.fn(() => [{ get: vi.fn(() => '1') }]),
-  };
-});
-
-const mockOnClick = vi.fn();
+vi.mock('../../src/hooks/redux', () => ({
+  useAppSelector: vi.fn((selector: (state: RootState) => unknown) =>
+    selector({
+      detailsReducer: { isOpened: true },
+      storedItemsReducer: {},
+      filterReducer: {},
+      starshipAPI: {},
+    } as RootState)
+  ),
+  useAppDispatch: vi.fn(() => vi.fn()),
+}));
 
 const mockResults = [
   { name: 'X-Wing', url: '/ship/1' },
@@ -104,5 +127,19 @@ describe('ResultList', () => {
     setup();
 
     expect(screen.getByText('X-Wing')).toBeInTheDocument();
+  });
+  it('calls closeDetails correctly', async () => {
+    vi.mocked(useAppDispatch).mockReturnValue(mockDispatch);
+    setup();
+
+    fireEvent.click(screen.getByText('X-Wing'));
+
+    const closeButton = await screen.findByRole('button', { name: /close/i });
+
+    expect(closeButton).toBeInTheDocument();
+    fireEvent.click(closeButton);
+
+    expect(mockNavigate).toHaveBeenCalledWith('?');
+    expect(mockDispatch).toHaveBeenCalledWith(toggle(false));
   });
 });

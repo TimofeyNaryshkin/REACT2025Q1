@@ -3,32 +3,13 @@ import classes from './Flyout.module.css';
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
 import Button from '../Button';
 import { storedItemsSlice } from '../../../store/reducers/StoredItemsSlice';
-import { Result } from '../../../types/response';
 import { useTheme } from '../../../hooks/useTheme';
+import { downloadCsv } from '../../../utils/downloadCsv';
 
 const Flyout: React.FC = () => {
   const storedItems = useAppSelector((state) => state.storedItemsReducer.items);
   const { unselectAll } = storedItemsSlice.actions;
   const dispatch = useAppDispatch();
-
-  const convertToCsv = (arr: Result[]) => {
-    const csvHeaders = Object.keys(arr[0]);
-    const csvRows = [...arr].map((item) => Object.values(item));
-    const csvArr = [csvHeaders, csvRows].map((arr) => arr.join(',')).join('\n');
-    return [csvArr];
-  };
-
-  const downloadCsv = (arr: Result[]) => {
-    const blob = new Blob(convertToCsv(arr), { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const fileName = `${arr.length}_starship${arr.length > 1 ? 's' : ''}.csv`;
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName;
-    document.body.append(link);
-    link.click();
-    link.remove();
-  };
 
   const darkTheme = useTheme();
 

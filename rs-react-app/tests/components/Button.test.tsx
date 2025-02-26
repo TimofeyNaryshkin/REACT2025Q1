@@ -5,6 +5,7 @@ import Button from '../../src/components/UI/Button';
 import React from 'react';
 
 describe('Button', () => {
+  function test(a: string) {}
   it('should render button with text if has children', () => {
     render(<Button>button</Button>);
     screen.debug();
