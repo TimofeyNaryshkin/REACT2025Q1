@@ -9,10 +9,10 @@ import { detailsSlice } from '../../../store/reducers/DetailsSlice';
 const Pagination: React.FC = () => {
   const { toggle } = detailsSlice.actions;
   const dispatch = useAppDispatch();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const page = searchParams.get('page') || '1';
+  //const [searchParams, setSearchParams] = useSearchParams();
+  const page = '1';
 
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const { data } = starshipAPI.useFetchShipsPageQuery(page);
 
   const [totalPages, setTotalPages] = useState(0);
@@ -23,11 +23,11 @@ const Pagination: React.FC = () => {
     setTotalPages(countPages(totalItems, limit));
   }, [data]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (!searchParams.has('page')) {
       navigate('/?page=1', { replace: true });
     }
-  }, [navigate, searchParams]);
+  }, [navigate, searchParams]); */
 
   const pagesArr = useMemo(() => {
     const arr = [];
@@ -39,10 +39,10 @@ const Pagination: React.FC = () => {
 
   const changePage = useCallback(
     (p: number) => {
-      setSearchParams({ page: p.toString() });
+      //setSearchParams({ page: p.toString() });
       dispatch(toggle(false));
     },
-    [dispatch, setSearchParams, toggle]
+    [dispatch, /* setSearchParams */, toggle]
   );
 
   return (
