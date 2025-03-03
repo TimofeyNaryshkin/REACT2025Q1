@@ -71,7 +71,7 @@ describe('Controls', () => {
     const searchButton = screen.getByText('Search');
     fireEvent.click(searchButton);
 
-    expect(mockDispatch).toHaveBeenCalled()
+    expect(mockDispatch).toHaveBeenCalled();
     expect(localStorage.getItem('lastSearch')).toBe('Millennium Falcon');
   });
 });

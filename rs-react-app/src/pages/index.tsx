@@ -1,4 +1,4 @@
-import Ships from "../components/Ships";
+import Ships from '../components/Ships';
 
 export default function Page() {
   return <Ships />;
