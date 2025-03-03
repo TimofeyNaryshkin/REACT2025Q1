@@ -3,7 +3,7 @@ import Pagination from '../components/UI/Pagination/Pagination';
 import React from 'react';
 import Flyout from '../components/UI/Flyout/Flyout';
 import { useTheme } from '../hooks/useTheme';
-import Header from '../components/Header/Header';
+import Header from './Header/Header';
 
 const Ships: React.FC = () => {
   const darkTheme = useTheme();

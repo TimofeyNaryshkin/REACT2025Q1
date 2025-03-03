@@ -5,9 +5,9 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router';
 import { starshipAPI } from '../../services/starship';
 import Loader from '../UI/Loader/Loader';
 import { Result } from '../../types/response';
-import Details from '../../pages/Details';
 import { detailsSlice } from '../../store/reducers/DetailsSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import Details from '../Details';
 
 const ResultList: React.FC = () => {
   const [searchParams] = useSearchParams();
