@@ -1,14 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Button from '../Button';
+import React, { useEffect, useMemo, useState } from 'react';
 import { starshipAPI } from '../../../services/starship';
 import countPages from '../../../utils/pages';
-import { useNavigate, useSearchParams } from 'react-router';
-import { useAppDispatch } from '../../../hooks/redux';
-import { detailsSlice } from '../../../store/reducers/DetailsSlice';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const Pagination: React.FC = () => {
-  const { toggle } = detailsSlice.actions;
-  const dispatch = useAppDispatch();
+  const { query } = useRouter();
+  /*  const { toggle } = detailsSlice.actions;
+  const dispatch = useAppDispatch(); */
   //const [searchParams, setSearchParams] = useSearchParams();
   const page = '1';
 
@@ -37,24 +36,24 @@ const Pagination: React.FC = () => {
     return arr;
   }, [totalPages]);
 
-  const changePage = useCallback(
+  /* const changePage = useCallback(
     (p: number) => {
-      //setSearchParams({ page: p.toString() });
+      setSearchParams({ page: p.toString() });
       dispatch(toggle(false));
     },
-    [dispatch, /* setSearchParams */, toggle]
-  );
+    [dispatch setSearchParams, , toggle]
+  ); */
 
   return (
     <div className="page-container">
       {pagesArr.map((p, i) => (
-        <Button
+        <Link
+          href={`/page/${p}`}
           key={i + 1}
-          className={page && +page === p ? 'page page_current' : 'page'}
-          onButtonClick={() => changePage(p)}
+          className={query.number && +query.number === p ? 'page page_current' : 'page'}
         >
           {p}
-        </Button>
+        </Link>
       ))}
     </div>
   );

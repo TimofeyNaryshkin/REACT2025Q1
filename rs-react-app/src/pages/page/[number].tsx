@@ -3,9 +3,12 @@ import ResultList from '@/components/ResultList/ResultList';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { IResponse } from 'types/response';
 
-export const getServerSideProps = (async () => {
+export const getServerSideProps = (async ({ query }) => {
   // Fetch data from external API
-  const response = await fetch('https://swapi.dev/api/starships/?page=1');
+  const { number } = query;
+  const response = await fetch(
+    `https://swapi.dev/api/starships/?page=${number}`
+  );
   const ships: IResponse = await response.json();
   // Pass data to the page via props
   return { props: { ships } };

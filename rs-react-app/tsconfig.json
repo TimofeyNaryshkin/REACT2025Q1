@@ -10,8 +10,7 @@
       "@/styles/*": ["styles/*"],
       "@/components/*": ["components/*"],
       "@/pages/": ["pages/"],
-      "@/hooks/": ["hooks/"],
-
+      "@/hooks/": ["hooks/"]
     },
     "plugins": [
       {
