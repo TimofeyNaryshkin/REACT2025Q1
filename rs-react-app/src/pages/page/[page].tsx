@@ -6,9 +6,7 @@ import { IResponse } from 'types/response';
 export const getServerSideProps = (async ({ query }) => {
   // Fetch data from external API
   const { page } = query;
-  const response = await fetch(
-    `https://swapi.dev/api/starships/?page=${page}`
-  );
+  const response = await fetch(`https://swapi.dev/api/starships/?page=${page}`);
   const ships: IResponse = await response.json();
   // Pass data to the page via props
   return { props: { ships } };
@@ -21,7 +19,7 @@ export default function Ships({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <Layout>
-      <ResultList ships={ships} children={null} />
+      <ResultList ships={ships} />
     </Layout>
   );
 }

@@ -1,20 +1,16 @@
-import { Result } from 'types/response';
+import { useAppSelector } from 'hooks/redux';
 import Button from '../UI/Button';
 
-export default function Details({ ship }: { ship: Result }) {
-  //const { isOpened } = useAppSelector((state) => state.detailsReducer);
-  /* const {
-    data: ship,
-    isFetching,
-    error,
-  } = starshipAPI.useFetchShipDetailsQuery(query.id); */
+export default function Details({
+  onButtonClick,
+}: {
+  onButtonClick: () => void;
+}) {
+  const ship = useAppSelector((state) => state.detailsReducer.ship);
 
   return (
     <div className="details">
-      <Button
-        className="details-close"
-        onButtonClick={() => console.log('123')}
-      >
+      <Button className="details-close" onButtonClick={onButtonClick}>
         Close
       </Button>
       <div>{`cost: ${ship.cost_in_credits}`}</div>

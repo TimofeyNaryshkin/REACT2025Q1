@@ -1,62 +1,54 @@
 import ResultItem from '@/components/ResultItem/ResultItem';
-import { useAppSelector } from 'hooks/redux';
-import Link from 'next/link';
-import { IResponse } from 'types/response';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { IResponse, Result } from 'types/response';
 import classes from './ResultList.module.css';
-import { ReactNode } from 'react';
+import { useRouter } from 'next/router';
+import { detailsSlice } from 'store/reducers/DetailsSlice';
+import Details from '@/components/Details/Details';
 
-export default function ResultList({
-  ships,
-  children,
-}: {
-  ships: IResponse;
-  children: ReactNode;
-}) {
+export default function ResultList({ ships }: { ships: IResponse }) {
   const searchQuery = useAppSelector(
     (state) => state.filterReducer.searchQuery
   );
-  /* const { filteredResults, isFetching, error } =
-    starshipAPI.useFetchShipsPageQuery(urlPage, {
-      selectFromResult: ({ data, isFetching, error }) => ({
-        filteredResults:
-          data?.results.filter((ship) =>
-            ship.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
-          ) || [],
-        isFetching,
-        error,
-      }),
-    }); */
+  const router = useRouter();
+  const isOpened = useAppSelector((state) => state.detailsReducer.isOpened);
+  const { toggle, setShip } = detailsSlice.actions;
+  const dispatch = useAppDispatch();
 
-  /* const closeDetails = () => {
-    const searchParams = new URLSearchParams(location.search).toString();
-    const to = searchParams.includes('&')
-      ? searchParams.slice(0, searchParams.indexOf('&'))
-      : '';
-    navigate(`?${to}`);
-
-    dispatch(toggle(false));
-  }; */
   const filteredResults =
     ships.results.filter((ship) =>
       ship.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
     ) || [];
 
-  /* const handleClick = (ship: Result) => {
-    setShipPath(ship.url.slice(ship.url.search(/\d+/)));
+  const closeDetails = () => {
+    dispatch(toggle(false));
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { page: router.query.page },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
 
-    const searchParams = new URLSearchParams(location.search);
-    const currentDetails = searchParams.get('details');
-
-    if (currentDetails === ship.name) {
-      searchParams.delete('details');
-      dispatch(toggle(false));
+  const handleClick = (ship: Result) => {
+    if (router.query.details === ship.name) {
+      closeDetails();
     } else {
-      searchParams.set('details', ship.name);
       dispatch(toggle(true));
+      dispatch(setShip(ship));
+      router.push(
+        {
+          pathname: router.pathname,
+          query: { ...router.query, details: ship.name },
+        },
+        undefined,
+        { shallow: true }
+      );
     }
-    const to = `${location.pathname}?${searchParams.toString()}`;
-    navigate(to);
-  }; */
+  };
+
   return (
     <div className="result-container">
       <div className={classes.list}>
@@ -68,13 +60,11 @@ export default function ResultList({
             </div>
             <div className={classes.content}>
               {filteredResults.map((ship) => (
-                <Link
-                  className="item-link"
+                <ResultItem
                   key={ship.url}
-                  href={`/details/${ship.url.slice(ship.url.search(/\d+/))}`}
-                >
-                  <ResultItem result={ship} onClick={() => console.log(ship)} />
-                </Link>
+                  result={ship}
+                  onClick={() => handleClick(ship)}
+                />
               ))}
             </div>
           </>
@@ -82,7 +72,7 @@ export default function ResultList({
           <h2>Nothing found D:</h2>
         )}
       </div>
-      {children}
+      {isOpened ? <Details onButtonClick={closeDetails} /> : null}
     </div>
   );
 }

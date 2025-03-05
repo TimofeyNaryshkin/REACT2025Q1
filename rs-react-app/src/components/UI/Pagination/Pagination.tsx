@@ -3,15 +3,15 @@ import { starshipAPI } from '../../../services/starship';
 import countPages from '../../../utils/pages';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { detailsSlice } from 'store/reducers/DetailsSlice';
 
 const Pagination: React.FC = () => {
   const { query } = useRouter();
-  /*  const { toggle } = detailsSlice.actions;
-  const dispatch = useAppDispatch(); */
-  //const [searchParams, setSearchParams] = useSearchParams();
   const page = '1';
+  const dispatch = useDispatch();
+  const { toggle } = detailsSlice.actions;
 
-  //const navigate = useNavigate();
   const { data } = starshipAPI.useFetchShipsPageQuery(page);
 
   const [totalPages, setTotalPages] = useState(0);
@@ -22,12 +22,6 @@ const Pagination: React.FC = () => {
     setTotalPages(countPages(totalItems, limit));
   }, [data]);
 
-  /* useEffect(() => {
-    if (!searchParams.has('page')) {
-      navigate('/?page=1', { replace: true });
-    }
-  }, [navigate, searchParams]); */
-
   const pagesArr = useMemo(() => {
     const arr = [];
     for (let i = 0; i < totalPages; i++) {
@@ -36,21 +30,16 @@ const Pagination: React.FC = () => {
     return arr;
   }, [totalPages]);
 
-  /* const changePage = useCallback(
-    (p: number) => {
-      setSearchParams({ page: p.toString() });
-      dispatch(toggle(false));
-    },
-    [dispatch setSearchParams, , toggle]
-  ); */
-
   return (
     <div className="page-container">
       {pagesArr.map((p, i) => (
         <Link
-          href={`/page/${p}`}
+          href={{ pathname: '/page/[page]', query: { page: p } }}
           key={i + 1}
-          className={query.number && +query.number === p ? 'page page_current' : 'page'}
+          className={
+            query.number && +query.number === p ? 'page page_current' : 'page'
+          }
+          onClick={() => dispatch(toggle(false))}
         >
           {p}
         </Link>

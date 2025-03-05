@@ -1,6 +1,8 @@
 import Layout from '@/components/Layout';
 import ResultList from '@/components/ResultList/ResultList';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { IResponse } from 'types/response';
 
 export const getServerSideProps = (async () => {
@@ -16,9 +18,13 @@ export const getServerSideProps = (async () => {
 export default function Ships({
   ships,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter()
+  useEffect(() => {
+    router.push('/page/1', undefined, {shallow: true})
+  }, [])
   return (
     <Layout>
-      <ResultList ships={ships} children={null} />
+      <ResultList ships={ships} />
     </Layout>
   );
 }
