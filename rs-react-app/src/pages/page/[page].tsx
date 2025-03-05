@@ -5,9 +5,9 @@ import { IResponse } from 'types/response';
 
 export const getServerSideProps = (async ({ query }) => {
   // Fetch data from external API
-  const { number } = query;
+  const { page } = query;
   const response = await fetch(
-    `https://swapi.dev/api/starships/?page=${number}`
+    `https://swapi.dev/api/starships/?page=${page}`
   );
   const ships: IResponse = await response.json();
   // Pass data to the page via props
