@@ -9,6 +9,11 @@ export const getServerSideProps = (async () => {
   // Fetch data from external API
   const response = await fetch('https://swapi.dev/api/starships/?page=1');
   const ships: IResponse = await response.json();
+  if (!ships) {
+    return {
+      notFound: true,
+    }
+  }
   // Pass data to the page via props
   return { props: { ships } };
 }) satisfies GetServerSideProps<{
