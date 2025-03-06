@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import Search from '../UI/Search';
 import Button from '../UI/Button';

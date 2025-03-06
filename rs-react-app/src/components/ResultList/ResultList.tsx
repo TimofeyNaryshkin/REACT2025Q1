@@ -1,16 +1,23 @@
+'use client';
+
 import ResultItem from '@/components/ResultItem/ResultItem';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { IResponse, Result } from 'types/response';
 import classes from './ResultList.module.css';
-import { useRouter } from 'next/router';
+
 import { detailsSlice } from 'store/reducers/DetailsSlice';
 import Details from '@/components/Details/Details';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export default function ResultList({ ships }: { ships: IResponse }) {
   const searchQuery = useAppSelector(
     (state) => state.filterReducer.searchQuery
   );
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const details = searchParams.get('details');
+  const pathname = usePathname();
+
   const isOpened = useAppSelector((state) => state.detailsReducer.isOpened);
   const { toggle, setShip } = detailsSlice.actions;
   const dispatch = useAppDispatch();
@@ -22,30 +29,16 @@ export default function ResultList({ ships }: { ships: IResponse }) {
 
   const closeDetails = () => {
     dispatch(toggle(false));
-    router.push(
-      {
-        pathname: router.pathname,
-        query: { page: router.query.page },
-      },
-      undefined,
-      { shallow: true }
-    );
+    router.push(pathname, { scroll: false });
   };
 
   const handleClick = (ship: Result) => {
-    if (router.query.details === ship.name) {
+    if (details === ship.name) {
       closeDetails();
     } else {
       dispatch(toggle(true));
       dispatch(setShip(ship));
-      router.push(
-        {
-          pathname: router.pathname,
-          query: { ...router.query, details: ship.name },
-        },
-        undefined,
-        { shallow: true }
-      );
+      router.push(`${pathname}?details=${ship.name}`, { scroll: false });
     }
   };
 
