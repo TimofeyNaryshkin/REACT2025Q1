@@ -2,14 +2,14 @@
 
 import ResultItem from '@/components/ResultItem/ResultItem';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { IResponse, Result } from 'types/response';
+import { Result } from 'types/response';
 import classes from './ResultList.module.css';
 
 import { detailsSlice } from 'store/reducers/DetailsSlice';
 import Details from '@/components/Details/Details';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-export default function ResultList({ ships }: { ships: IResponse }) {
+export default function ResultList({ ships }: { ships: Result[] }) {
   const searchQuery = useAppSelector(
     (state) => state.filterReducer.searchQuery
   );
@@ -23,7 +23,7 @@ export default function ResultList({ ships }: { ships: IResponse }) {
   const dispatch = useAppDispatch();
 
   const filteredResults =
-    ships.results.filter((ship) =>
+    ships.filter((ship) =>
       ship.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
     ) || [];
 

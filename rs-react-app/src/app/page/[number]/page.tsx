@@ -1,3 +1,4 @@
+import Layout from '@/components/Layout';
 import ResultList from '@/components/ResultList/ResultList';
 import { IResponse } from 'types/response';
 
@@ -14,5 +15,5 @@ export default async function ShipsPage({
 }) {
   const { number } = await params;
   const ships = await getShips(number || '1');
-  return <ResultList ships={ships} />;
+  return <Layout totalItems={ships.count}><ResultList ships={ships.results} /></Layout>;
 }

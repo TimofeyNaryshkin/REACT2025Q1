@@ -1,7 +1,6 @@
 import ContextProvider from '@/components/ContextProvider';
-import Layout from '@/components/Layout';
 import type { Metadata } from 'next';
-import 'App.css'
+import './global.css';
 
 export const metadata: Metadata = {
   title: 'Home',
@@ -19,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ContextProvider>
-          <Layout>{children}</Layout>
+          {children}
         </ContextProvider>
       </body>
     </html>

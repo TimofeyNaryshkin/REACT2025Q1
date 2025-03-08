@@ -49,8 +49,9 @@
     "resolveJsonModule": true
   },
   "include": [
+    "global.d.ts",
     "./dist/types/**/*.ts",
-    "./ne  xt-env.d.ts",
+    "./next-env.d.ts",
     "./src",
     ".next/types/**/*.ts"
   ],
