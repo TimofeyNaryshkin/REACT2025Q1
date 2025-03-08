@@ -5,6 +5,7 @@ import Pagination from "src/components/UI/Pagination/Pagination";
 import Flyout from "src/components/UI/Flyout/Flyout";
 import { useTheme } from "src/hooks/useTheme";
 import { Route } from "./+types/page";
+import { Outlet } from "react-router";
 
 export async function loader({params}: Route.LoaderArgs) {
   if (!params.page) {
@@ -20,11 +21,13 @@ export default function Page({ loaderData, params }: Route.ComponentProps) {
     return
   }
   const {results, count} = loaderData
-  const {page, details} = params
+  const {page} = params
   return (
     <div className={`app ${darkTheme ? 'theme_dark' : ''}`.trim()}>
       <Header />
-      <ResultList ships={results} detailsQuery={details}/>
+      <ResultList ships={results} params={params}>
+        <Outlet/>
+      </ResultList>
       <Pagination totalItems={count} page={page}/>
       <Flyout />
     </div>

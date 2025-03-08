@@ -1,16 +1,15 @@
-import { useState } from 'react';
 import ResultItem from '../ResultItem/ResultItem';
 import classes from './ResultList.module.css';
 import { Result } from '../../types/response';
-import Details from '../../pages/Details';
 import { detailsSlice } from '../../store/reducers/DetailsSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { Params, useNavigate } from 'react-router';
 
-const ResultList = ({ships, detailsQuery}: {ships: Result[], detailsQuery: string | undefined}) => {
+const ResultList = ({ships, params, children}: {ships: Result[], params: Params, children: React.ReactElement}) => {
+  const navigate = useNavigate()
 
   const { toggle } = detailsSlice.actions;
   const dispatch = useAppDispatch();
-  const [shipPath, setShipPath] = useState('');
   const searchQuery = useAppSelector(
     (state) => state.filterReducer.searchQuery
   );
@@ -21,13 +20,16 @@ const ResultList = ({ships, detailsQuery}: {ships: Result[], detailsQuery: strin
   ) || []
 
   const closeDetails = () => {
+    navigate(`/page/${params.page}`)
     dispatch(toggle(false));
   };
 
   const handleClick = (ship: Result) => {
-    if (detailsQuery === ship.name) {
-      dispatch(toggle(false));
+    const id = ship.url.slice(ship.url.search(/\d+/), -1)
+    if (params.id === id) {
+      closeDetails()
     } else {
+      navigate(`/page/${params.page}/details/${id}`)
       dispatch(toggle(true));
     }
   };
@@ -54,7 +56,7 @@ const ResultList = ({ships, detailsQuery}: {ships: Result[], detailsQuery: strin
           <h2>Nothing found D:</h2>
         )}
       </div>
-      {isOpened && <Details shipPath={shipPath} onButtonClick={closeDetails} />}
+      {isOpened && children}
     </div>
   );
 };

@@ -7,7 +7,7 @@ import {
 export default [
   index('./home.tsx'),
   route("page/:page", "./routes/page.tsx", [
-    route('details/:name', './routes/details.tsx')
+    route('details/:id', './routes/details.tsx')
   ]),
   // pattern ^           ^ module file
 ] satisfies RouteConfig;
