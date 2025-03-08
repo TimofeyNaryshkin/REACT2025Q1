@@ -8,4 +8,11 @@ declare module "react-router" {
 
 type Params = {
   "/": {};
+  "/page/:page": {
+    "page": string;
+  };
+  "/page/:page/details/:name": {
+    "page": string;
+    "name": string;
+  };
 };

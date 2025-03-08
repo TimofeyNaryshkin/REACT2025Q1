@@ -23,7 +23,6 @@
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "esModuleInterop": true,
-    "verbatimModuleSyntax": true,
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
