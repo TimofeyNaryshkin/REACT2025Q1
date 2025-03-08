@@ -24,8 +24,8 @@ export default function Ships({
   ships,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
-    <Layout>
-      <ResultList ships={ships} />
+    <Layout totalItems={ships.count}>
+      <ResultList ships={ships.results} />
     </Layout>
   );
 }

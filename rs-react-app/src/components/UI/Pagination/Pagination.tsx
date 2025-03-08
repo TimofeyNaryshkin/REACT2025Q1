@@ -1,26 +1,21 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { starshipAPI } from '../../../services/starship';
+import { useEffect, useMemo, useState } from 'react';
 import countPages from '../../../utils/pages';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { detailsSlice } from 'store/reducers/DetailsSlice';
 
-const Pagination: React.FC = () => {
+const Pagination = ({totalItems}: {totalItems: number}) => {
   const { query } = useRouter();
-  const page = '1';
   const dispatch = useDispatch();
   const { toggle } = detailsSlice.actions;
-
-  const { data } = starshipAPI.useFetchShipsPageQuery(page);
 
   const [totalPages, setTotalPages] = useState(0);
   const limit = 10;
 
   useEffect(() => {
-    const totalItems = data ? +data.count : 0;
     setTotalPages(countPages(totalItems, limit));
-  }, [data]);
+  }, [totalItems]);
 
   const pagesArr = useMemo(() => {
     const arr = [];

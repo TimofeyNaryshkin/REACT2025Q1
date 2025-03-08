@@ -10,7 +10,7 @@
       "@/styles/*": ["styles/*"],
       "@/components/*": ["components/*"],
       "@/pages/": ["pages/"],
-      "@/hooks/": ["hooks/"]
+      "@/hooks/": ["hooks/"],
     },
     "plugins": [
       {
@@ -36,6 +36,6 @@
     "noUncheckedSideEffectImports": true,
     "resolveJsonModule": true
   },
-  "include": ["./src", "./dist/types/**/*.ts", "./ne  xt-env.d.ts"],
+  "include": ["./src", "./dist/types/**/*.ts", "./ne  xt-env.d.ts", "global.d.ts"],
   "exclude": ["./node_modules"]
 }
