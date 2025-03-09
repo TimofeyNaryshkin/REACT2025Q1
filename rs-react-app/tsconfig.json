@@ -2,27 +2,15 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
     "baseUrl": "src/",
     "paths": {
-      "@/styles/*": [
-        "styles/*"
-      ],
-      "@/components/*": [
-        "components/*"
-      ],
-      "@/pages/": [
-        "pages/"
-      ],
-      "@/hooks/": [
-        "hooks/"
-      ]
+      "@/styles/*": ["styles/*"],
+      "@/components/*": ["components/*"],
+      "@/pages/": ["pages/"],
+      "@/hooks/": ["hooks/"]
     },
     "plugins": [
       {
@@ -55,7 +43,5 @@
     "./src",
     ".next/types/**/*.ts"
   ],
-  "exclude": [
-    "./node_modules"
-  ]
+  "exclude": ["./node_modules"]
 }

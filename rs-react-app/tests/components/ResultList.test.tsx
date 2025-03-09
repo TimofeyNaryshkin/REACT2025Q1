@@ -17,12 +17,12 @@ const mockRouter = {
 
 const mockSearchParams = {
   get: vi.fn(),
-}
+};
 
 vi.mock('next/navigation', () => ({
   useRouter: () => mockRouter,
   useSearchParams: () => mockSearchParams,
-  usePathname: () => '/page/1'
+  usePathname: () => '/page/1',
 }));
 
 const mockResults = [
@@ -70,7 +70,9 @@ describe('ResultList', () => {
       { scroll: false }
     );
     expect(store.dispatch).toBeCalledWith(toggle(true));
-    expect(store.dispatch).toBeCalledWith(setShip({ name: 'X-Wing', url: '/ship/1' }));
+    expect(store.dispatch).toBeCalledWith(
+      setShip({ name: 'X-Wing', url: '/ship/1' })
+    );
   });
   it('calls closeDetails correctly and updates URL on close button click', async () => {
     renderWithProviders(mockResults);
@@ -82,10 +84,9 @@ describe('ResultList', () => {
     expect(closeButton).toBeInTheDocument();
     fireEvent.click(closeButton);
 
-    expect(mockRouter.push).toHaveBeenCalledWith(
-      `${mockRouter.pathname}`,
-      { scroll: false }
-    );
+    expect(mockRouter.push).toHaveBeenCalledWith(`${mockRouter.pathname}`, {
+      scroll: false,
+    });
     expect(store.dispatch).toBeCalledWith(toggle(false));
   });
   it('calls closeDetails correctly and updates URL on same item click', async () => {
@@ -100,10 +101,9 @@ describe('ResultList', () => {
     );
     expect(store.dispatch).toBeCalledWith(toggle(true));
     waitFor(() => {
-      expect(mockRouter.push).toHaveBeenCalledWith(
-        `${mockRouter.pathname}`,
-        { scroll: false }
-      );
+      expect(mockRouter.push).toHaveBeenCalledWith(`${mockRouter.pathname}`, {
+        scroll: false,
+      });
       expect(store.dispatch).toBeCalledWith(toggle(false));
     });
   });

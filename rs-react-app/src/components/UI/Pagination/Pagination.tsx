@@ -7,11 +7,10 @@ import { useDispatch } from 'react-redux';
 import { detailsSlice } from 'store/reducers/DetailsSlice';
 import { usePathname } from 'next/navigation';
 
-const Pagination = ({totalItems} : {totalItems: number}) => {
+const Pagination = ({ totalItems }: { totalItems: number }) => {
   const pathname = usePathname();
   const dispatch = useDispatch();
   const { toggle } = detailsSlice.actions;
-
 
   const [totalPages, setTotalPages] = useState(0);
   const limit = 10;

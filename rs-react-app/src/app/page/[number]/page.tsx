@@ -15,5 +15,9 @@ export default async function ShipsPage({
 }) {
   const { number } = await params;
   const ships = await getShips(number || '1');
-  return <Layout totalItems={ships.count}><ResultList ships={ships.results} /></Layout>;
+  return (
+    <Layout totalItems={ships.count}>
+      <ResultList ships={ships.results} />
+    </Layout>
+  );
 }
