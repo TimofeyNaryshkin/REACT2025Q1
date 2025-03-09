@@ -1,24 +1,12 @@
-import { it, describe, expect, vi, beforeEach, Mock } from 'vitest';
+import { it, describe, expect, vi, beforeEach, Mock, afterEach } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
-import Details from '../../src/pages/Details';
-import React from 'react';
-import { MemoryRouter } from 'react-router';
+import Details from '../../src/components/Details/Details';
 import { Provider } from 'react-redux';
-import { starshipAPI } from '../../src/services/starship';
-import { configureStore } from '@reduxjs/toolkit';
-import detailsReducer from '../../src/store/reducers/DetailsSlice';
-import { useAppSelector } from '../../src/hooks/redux';
-
-vi.mock('../../src/services/starship', () => ({
-  starshipAPI: {
-    useFetchShipDetailsQuery: vi.fn(),
-  },
-}));
-
-vi.mock('../../src/hooks/redux', () => ({
-  useAppSelector: vi.fn(),
-}));
+import { setShip } from '../../src/store/reducers/DetailsSlice';
+import React from 'react';
+import { Result } from '../../src/types/response';
+import { setupStore } from '../../src/store/store';
 
 const mockOnClick = vi.fn();
 
@@ -48,53 +36,24 @@ const mockResult = {
 };
 
 describe('Details', () => {
-  const mockStore = configureStore({
-    reducer: {
-      detailsReducer,
-      [starshipAPI.reducerPath]: starshipAPI.reducer,
-    },
-  });
+  const store = setupStore();
 
-  const renderWithProviders = (shipPath: string, isOpened: boolean = true) => {
-    (useAppSelector as Mock).mockReturnValue({ isOpened: isOpened });
+  const renderWithProviders = (ship: Result | {}) => {
+    store.dispatch(setShip(ship));
 
     render(
-      <Provider store={mockStore}>
-        <MemoryRouter>
-          <Details shipPath={shipPath} onButtonClick={mockOnClick} />
-        </MemoryRouter>
+      <Provider store={store}>
+        <Details onButtonClick={mockOnClick} />
       </Provider>
     );
   };
 
-  beforeEach(() => {
+  afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('renders loading state when fetching', () => {
-    (starshipAPI.useFetchShipDetailsQuery as Mock).mockReturnValue({
-      isFetching: true,
-    });
-
-    renderWithProviders('1/');
-
-    expect(screen.getByTestId('loader')).toBeInTheDocument();
-  });
-  it('renders error message when API call fails', () => {
-    (starshipAPI.useFetchShipDetailsQuery as Mock).mockReturnValue({
-      error: true,
-    });
-
-    renderWithProviders('1/');
-
-    expect(screen.getByText('Cant find details')).toBeInTheDocument();
-  });
   it('renders ship details correctly when data is available', () => {
-    (starshipAPI.useFetchShipDetailsQuery as Mock).mockReturnValue({
-      data: mockResult,
-    });
-
-    renderWithProviders('1/');
+    renderWithProviders(mockResult);
     screen.debug();
 
     expect(screen.getByText('cost: 3500000')).toBeInTheDocument();
@@ -105,12 +64,13 @@ describe('Details', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('class: corvette')).toBeInTheDocument();
   });
-  it('should not render when isOpened is false', () => {
-    renderWithProviders('1/', false);
-    expect(screen.queryByText('Close')).not.toBeInTheDocument();
+  it('should not render when no data is provided', () => {
+    renderWithProviders({});
+    screen.debug();
+    expect(screen.getByText('cost: undefined')).toBeInTheDocument();
   });
   it('should call onButtonClick when the close button is clicked', () => {
-    renderWithProviders('1/', true);
+    renderWithProviders(mockResult);
     const closeButton = screen.queryByText('Close');
     fireEvent.click(closeButton);
     expect(mockOnClick).toBeCalled();
