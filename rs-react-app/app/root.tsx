@@ -10,6 +10,9 @@ import {
 import type { Route } from "./+types/root";
 import './app.css';
 import ContextProvider from "src/components/ContextProvider";
+import { useNavigation } from "react-router";
+import Loader from "src/components/UI/Loader/Loader";
+import { Link } from "react-router";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -25,6 +28,9 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const navigation = useNavigation();
+  const isNavigating = Boolean(navigation.location);
+
   return (
     <html lang="en">
       <head>
@@ -35,7 +41,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <ContextProvider>
-          {children}
+          {isNavigating ? <Loader/> : children}
         </ContextProvider>
         <ScrollRestoration />
         <Scripts />
@@ -65,8 +71,9 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
+    <main className="error-message pt-16 p-4 container mx-auto">
       <h1>{message}</h1>
+      <Link to='/page/1'>Go home</Link>
       <p>{details}</p>
       {stack && (
         <pre className="w-full p-4 overflow-x-auto">
