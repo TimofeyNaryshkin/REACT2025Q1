@@ -24,5 +24,5 @@ export const detailsSlice = createSlice({
   },
 });
 
-export const { toggle } = detailsSlice.actions;
+export const { toggle, setShip } = detailsSlice.actions;
 export default detailsSlice.reducer;

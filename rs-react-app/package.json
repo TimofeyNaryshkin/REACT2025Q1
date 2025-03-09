@@ -13,8 +13,7 @@
     "format:fix": "prettier --write .",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
+    "test": "vitest --ui",
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
@@ -56,6 +55,7 @@
     "prettier": "3.4.2",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.0.5"
   }
 }
