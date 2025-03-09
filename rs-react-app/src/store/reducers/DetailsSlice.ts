@@ -18,11 +18,11 @@ export const detailsSlice = createSlice({
     toggle(state, action: PayloadAction<boolean>) {
       state.isOpened = action.payload;
     },
-    setShip(state, action: PayloadAction<Result>) {
+    setShip(state, action: PayloadAction<Result | {}>) {
       state.ship = action.payload;
     },
   },
 });
 
-export const { toggle } = detailsSlice.actions;
+export const { toggle, setShip } = detailsSlice.actions;
 export default detailsSlice.reducer;

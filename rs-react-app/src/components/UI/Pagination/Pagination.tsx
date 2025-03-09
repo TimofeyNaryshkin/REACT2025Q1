@@ -3,7 +3,7 @@ import countPages from '../../../utils/pages';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { detailsSlice } from 'store/reducers/DetailsSlice';
+import { detailsSlice } from '@/store/reducers/DetailsSlice';
 
 const Pagination = ({totalItems}: {totalItems: number}) => {
   const { query } = useRouter();

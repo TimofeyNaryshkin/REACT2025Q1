@@ -1,5 +1,6 @@
-import { useAppSelector } from 'hooks/redux';
+import { useAppSelector } from '../../hooks/redux';
 import Button from '../UI/Button';
+import React from 'react';
 
 export default function Details({
   onButtonClick,
