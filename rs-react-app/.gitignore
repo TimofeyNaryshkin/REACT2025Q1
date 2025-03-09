@@ -12,6 +12,8 @@ dist
 dist-ssr
 coverage
 *.local
+build
+.next
 
 # Editor directories and files
 .vscode/*
@@ -24,4 +26,4 @@ coverage
 *.sln
 *.sw?
 
-.react-router/
+
