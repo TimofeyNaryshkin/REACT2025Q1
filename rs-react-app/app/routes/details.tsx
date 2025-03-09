@@ -1,19 +1,22 @@
-import { Result } from "src/types/response";
-import { Route } from "./+types/details";
-import { Link } from "react-router";
+import { Result } from 'src/types/response';
+import { Route } from './+types/details';
+import { Link } from 'react-router';
 
-export async function loader({params}: Route.LoaderArgs) {
+export async function loader({ params }: Route.LoaderArgs) {
   if (!params.id) {
-    return
+    return;
   }
   const response = await fetch(`https://swapi.dev/api/starships/${params.id}`);
   const data: Result = await response.json();
   return data;
 }
 
-export default function Details ({ loaderData: ship, params } : Route.ComponentProps) {
+export default function Details({
+  loaderData: ship,
+  params,
+}: Route.ComponentProps) {
   if (!ship) {
-    return
+    return;
   }
   return (
     <div className="details">
@@ -26,5 +29,5 @@ export default function Details ({ loaderData: ship, params } : Route.ComponentP
       <div>{`manufacturer: ${ship.manufacturer}`}</div>
       <div>{`class: ${ship.starship_class}`}</div>
     </div>
-  )
-};
+  );
+}

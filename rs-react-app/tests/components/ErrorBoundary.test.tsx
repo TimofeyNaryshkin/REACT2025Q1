@@ -25,9 +25,9 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
 
-    expect(screen.getByText(/Oops Error Please try this page/i)).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /reload/i })
+      screen.getByText(/Oops Error Please try this page/i)
     ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /reload/i })).toBeInTheDocument();
   });
 });

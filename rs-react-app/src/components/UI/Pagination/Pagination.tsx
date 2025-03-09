@@ -4,7 +4,13 @@ import { Link } from 'react-router';
 import { useAppDispatch } from '../../../hooks/redux';
 import { detailsSlice } from '../../../store/reducers/DetailsSlice';
 
-const Pagination = ({totalItems, page}: {totalItems: number, page: string}) => {
+const Pagination = ({
+  totalItems,
+  page,
+}: {
+  totalItems: number;
+  page: string;
+}) => {
   const { toggle } = detailsSlice.actions;
   const dispatch = useAppDispatch();
 

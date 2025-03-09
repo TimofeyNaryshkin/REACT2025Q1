@@ -1,4 +1,4 @@
-import type { IResponse } from "src/types/response";
+import type { IResponse } from 'src/types/response';
 
 const getStarships = async (page: string) => {
   const response = await fetch(`https://swapi.dev/api/starships/?page=${page}`);
