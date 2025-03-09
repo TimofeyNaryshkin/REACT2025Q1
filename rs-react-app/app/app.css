@@ -78,7 +78,7 @@ button:focus-visible {
 }
 
 .page_current {
-  border: 2px solid rgb(126, 0, 180);
+  border: 2px solid rgb(126, 0, 180) !important;
 }
 
 .page {
