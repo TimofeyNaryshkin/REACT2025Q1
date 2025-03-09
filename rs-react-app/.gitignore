@@ -13,6 +13,8 @@ coverage
 dist-ssr
 *.local
 .next
+build
+.react-router
 
 # Editor directories and files
 .vscode/*
