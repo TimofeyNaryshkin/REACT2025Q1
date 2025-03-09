@@ -18,7 +18,7 @@ export const detailsSlice = createSlice({
     toggle(state, action: PayloadAction<boolean>) {
       state.isOpened = action.payload;
     },
-    setShip(state, action: PayloadAction<Result | {}>) {
+    setShip(state, action: PayloadAction<Result | object>) {
       state.ship = action.payload;
     },
   },

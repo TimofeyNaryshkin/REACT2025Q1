@@ -36,14 +36,14 @@ const mockResult = {
 };
 
 describe('Details', () => {
-  const store = setupStore()
+  const store = setupStore();
 
   const renderWithProviders = (ship: Result | {}) => {
-    store.dispatch(setShip(ship))
+    store.dispatch(setShip(ship));
 
     render(
       <Provider store={store}>
-          <Details onButtonClick={mockOnClick} />
+        <Details onButtonClick={mockOnClick} />
       </Provider>
     );
   };

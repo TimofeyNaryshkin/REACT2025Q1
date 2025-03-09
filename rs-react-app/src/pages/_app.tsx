@@ -2,7 +2,7 @@ import type { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from '../hooks/useTheme';
 import { setupStore } from '../store/store';
-import '@/styles/App.css'
+import '@/styles/App.css';
 
 const store = setupStore();
 

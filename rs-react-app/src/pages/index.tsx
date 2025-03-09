@@ -10,7 +10,7 @@ export const getServerSideProps = (async () => {
   if (!ships) {
     return {
       notFound: true,
-    }
+    };
   }
   // Pass data to the page via props
   return { props: { ships } };

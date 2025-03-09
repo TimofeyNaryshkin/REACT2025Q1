@@ -11,7 +11,7 @@
       "@/components/*": ["components/*"],
       "@/pages/": ["pages/"],
       "@/hooks/*": ["hooks/*"],
-      "@/store/*": ["store/*"],
+      "@/store/*": ["store/*"]
     },
     "plugins": [
       {
@@ -37,6 +37,11 @@
     "noUncheckedSideEffectImports": true,
     "resolveJsonModule": true
   },
-  "include": ["./src", "./dist/types/**/*.ts", "./ne  xt-env.d.ts", "global.d.ts"],
+  "include": [
+    "./src",
+    "./dist/types/**/*.ts",
+    "./ne  xt-env.d.ts",
+    "global.d.ts"
+  ],
   "exclude": ["./node_modules"]
 }

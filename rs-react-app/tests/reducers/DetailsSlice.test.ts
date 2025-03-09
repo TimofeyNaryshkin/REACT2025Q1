@@ -4,8 +4,8 @@ import { detailsSlice } from '../../src/store/reducers/DetailsSlice';
 
 const mockShip = {
   name: 'fighter',
-  class: 'fighter'
-}
+  class: 'fighter',
+};
 
 describe('detailsSlice', () => {
   it('should work with empty state', () => {
@@ -16,7 +16,7 @@ describe('detailsSlice', () => {
   it('toggle', () => {
     expect(
       detailsSlice.reducer(
-        { isOpened: false, ship: mockShip},
+        { isOpened: false, ship: mockShip },
         detailsSlice.actions.toggle(true)
       )
     ).toEqual({ isOpened: true, ship: mockShip });

@@ -4,22 +4,22 @@ import Pagination from '../../src/components/UI/Pagination/Pagination';
 import React from 'react';
 import { Provider, useDispatch } from 'react-redux';
 import { setupStore } from '../../src/store/store';
-import { toggle } from '../../src/store/reducers/DetailsSlice'
+import { toggle } from '../../src/store/reducers/DetailsSlice';
 
 const mockRouter = {
   push: vi.fn(),
   replace: vi.fn(),
   query: {},
   pathname: '/',
-}
+};
 
 vi.mock('next/router', () => ({
-  useRouter: () => mockRouter
-}))
+  useRouter: () => mockRouter,
+}));
 
 describe('Pagination', () => {
-  const store = setupStore()
-  vi.spyOn(store,'dispatch')
+  const store = setupStore();
+  vi.spyOn(store, 'dispatch');
 
   afterEach(() => {
     vi.clearAllMocks();
@@ -28,25 +28,24 @@ describe('Pagination', () => {
   const renderWithProviders = (totalItems: number) =>
     render(
       <Provider store={store}>
-        <Pagination totalItems={totalItems}/>
+        <Pagination totalItems={totalItems} />
       </Provider>
     );
 
   it('renders correct number of pagination buttons', () => {
     renderWithProviders(36);
 
-    screen.debug()
+    screen.debug();
     expect(screen.getAllByRole('link')).toHaveLength(4);
   });
   it('should update the URL and close details on link click', () => {
-
     renderWithProviders(36);
 
-    screen.debug()
+    screen.debug();
     const pageButton = screen.getByText('2');
     fireEvent.click(pageButton);
 
-    waitFor(() => expect(mockRouter.pathname).toBe('/page/2'))
-    expect(store.dispatch).toBeCalledWith(toggle(false))
+    waitFor(() => expect(mockRouter.pathname).toBe('/page/2'));
+    expect(store.dispatch).toBeCalledWith(toggle(false));
   });
 });

@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
         destination: '/page/1',
         permanent: true,
       },
-    ]
+    ];
   },
 };
 

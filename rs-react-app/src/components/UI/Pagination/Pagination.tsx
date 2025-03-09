@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { detailsSlice } from '@/store/reducers/DetailsSlice';
 
-const Pagination = ({totalItems}: {totalItems: number}) => {
+const Pagination = ({ totalItems }: { totalItems: number }) => {
   const { query } = useRouter();
   const dispatch = useDispatch();
   const { toggle } = detailsSlice.actions;

@@ -13,11 +13,11 @@ const mockRouter = {
   replace: vi.fn(),
   query: {},
   pathname: '/page/1',
-}
+};
 
 vi.mock('next/router', () => ({
-  useRouter: () => mockRouter
-}))
+  useRouter: () => mockRouter,
+}));
 
 const mockResults = [
   { name: 'X-Wing', url: '/ship/1' },
@@ -25,13 +25,13 @@ const mockResults = [
 ];
 
 describe('ResultList', () => {
-  const store = setupStore()
-  vi.spyOn(store, 'dispatch')
+  const store = setupStore();
+  vi.spyOn(store, 'dispatch');
 
-  const renderWithProviders = (ships : Result[] | typeof mockResults | []) => {
+  const renderWithProviders = (ships: Result[] | typeof mockResults | []) => {
     return render(
       <Provider store={store}>
-          <ResultList ships={ships}/>
+        <ResultList ships={ships} />
       </Provider>
     );
   };
@@ -59,7 +59,11 @@ describe('ResultList', () => {
     const closeButton = await screen.findByRole('button', { name: /close/i });
 
     expect(closeButton).toBeInTheDocument();
-    expect(mockRouter.push).toHaveBeenCalledWith({pathname: mockRouter.pathname, query: {details: 'X-Wing'}}, undefined, {shallow: true})
+    expect(mockRouter.push).toHaveBeenCalledWith(
+      { pathname: mockRouter.pathname, query: { details: 'X-Wing' } },
+      undefined,
+      { shallow: true }
+    );
     expect(store.dispatch).toBeCalledWith(toggle(true));
   });
   it('calls closeDetails correctly and updates URL on close button click', async () => {
@@ -72,7 +76,11 @@ describe('ResultList', () => {
     expect(closeButton).toBeInTheDocument();
     fireEvent.click(closeButton);
 
-    expect(mockRouter.push).toHaveBeenCalledWith({pathname: mockRouter.pathname, query: {details: 'X-Wing'}}, undefined, {shallow: true})
+    expect(mockRouter.push).toHaveBeenCalledWith(
+      { pathname: mockRouter.pathname, query: { details: 'X-Wing' } },
+      undefined,
+      { shallow: true }
+    );
     expect(store.dispatch).toBeCalledWith(toggle(false));
   });
   it('calls closeDetails correctly and updates URL on same item click', async () => {
@@ -81,11 +89,19 @@ describe('ResultList', () => {
     fireEvent.click(screen.getByText('X-Wing'));
     fireEvent.click(screen.getByText('X-Wing'));
 
-    expect(mockRouter.push).toHaveBeenCalledWith({pathname: mockRouter.pathname, query: {details: 'X-Wing'}}, undefined, {shallow: true})
+    expect(mockRouter.push).toHaveBeenCalledWith(
+      { pathname: mockRouter.pathname, query: { details: 'X-Wing' } },
+      undefined,
+      { shallow: true }
+    );
     expect(store.dispatch).toBeCalledWith(toggle(true));
     waitFor(() => {
-      expect(mockRouter.push).toHaveBeenCalledWith({pathname: mockRouter.pathname, query: {page: '1'}}, undefined, {shallow: true})
+      expect(mockRouter.push).toHaveBeenCalledWith(
+        { pathname: mockRouter.pathname, query: { page: '1' } },
+        undefined,
+        { shallow: true }
+      );
       expect(store.dispatch).toBeCalledWith(toggle(false));
-    })
+    });
   });
 });
