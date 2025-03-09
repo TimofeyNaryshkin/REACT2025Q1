@@ -1,57 +1,77 @@
-import { it, expect, describe, vi } from 'vitest';
+import { it, describe, expect, vi, beforeEach } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
-import React from 'react';
+import React, { useState } from 'react';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import filterReducer from '../../src/store/reducers/FilterSlice';
 import Controls from '../../src/components/Controls/Controls';
+import useLastSearch from '../../src/hooks/useLastSearch';
+import { setupStore } from '../../src/store/store';
+import { useAppDispatch } from '../../src/hooks/redux';
 
-vi.mock('../../src/components/UI/Search', () => ({
-  __esModule: true,
-  default: (props: any) => <input {...props} placeholder="Search input" />,
+vi.mock('../../src/hooks/redux', () => ({
+  useAppDispatch: vi.fn(),
 }));
 
-vi.mock('../../src/components/UI/Button', () => ({
-  __esModule: true,
-  default: ({
-    onButtonClick,
-    children,
-  }: {
-    onButtonClick: any;
-    children: string;
-  }) => <button onClick={onButtonClick}>{children}</button>,
-}));
+vi.mock(import('../../src/hooks/useLastSearch'), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useLastSearch: () => useState(''),
+  };
+});
 
-describe('Controls Component', () => {
-  it('renders the Controls component', () => {
-    render(<Controls onButtonClick={vi.fn()} />);
+const mockOnClick = vi.fn();
 
-    expect(screen.getByPlaceholderText('Search input')).toBeInTheDocument();
+describe('Controls', () => {
+  const setup = () => {
+    const store = setupStore();
+    return render(
+      <Provider store={store}>
+        <Controls />
+      </Provider>
+    );
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    localStorage.clear();
+  });
+
+  it('renders correctly', () => {
+    setup();
+
     expect(screen.getByText('Search')).toBeInTheDocument();
     expect(screen.getByText('Throw error')).toBeInTheDocument();
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
   });
+  it('should throw error on error button click', () => {
+    setup();
 
-  it('calls onButtonClick when Search button is clicked', () => {
-    const mockOnClick = vi.fn();
-    render(<Controls onButtonClick={mockOnClick} />);
-
-    fireEvent.click(screen.getByText('Search'));
-
-    expect(mockOnClick).toHaveBeenCalled();
+    const errorButton = screen.getByText('Throw error');
+    expect(() => fireEvent.click(errorButton)).toThrowError('Error');
   });
+  it('should update search on input', () => {
+    setup();
 
-  it('updates input value when typing', () => {
-    render(<Controls onButtonClick={vi.fn()} />);
-
-    const input = screen.getByPlaceholderText('Search input');
-    fireEvent.change(input, { target: { value: 'X-Wing' } });
-
-    expect(input).toHaveValue('X-Wing');
+    screen.debug();
+    const search = screen.getByRole('textbox');
+    fireEvent.change(search, { target: { value: 'star' } });
+    expect(search).toHaveValue('star');
   });
+  it('dispatches setSearchQuery and saves to localStorage on search', () => {
+    const mockDispatch = vi.fn();
+    vi.mocked(useAppDispatch).mockReturnValue(mockDispatch);
 
-  it("throws an error when 'Throw error' button is clicked", () => {
-    render(<Controls onButtonClick={vi.fn()} />);
+    setup();
+    const input = screen.getByRole('textbox');
+    fireEvent.change(input, { target: { value: 'Millennium Falcon' } });
 
-    expect(() => {
-      fireEvent.click(screen.getByText('Throw error'));
-    }).toThrow('Error');
+    const searchButton = screen.getByText('Search');
+    fireEvent.click(searchButton);
+
+    expect(mockDispatch).toHaveBeenCalled()
+    expect(localStorage.getItem('lastSearch')).toBe('Millennium Falcon');
   });
 });

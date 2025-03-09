@@ -1,7 +1,13 @@
 .item {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   border: 1px solid black;
   justify-content: center;
   align-items: center;
+}
+
+.checkbox {
+  width: 30px;
+  height: 30px;
+  justify-self: center;
 }
