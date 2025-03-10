@@ -14,10 +14,12 @@ export async function loader({ params }: Route.LoaderArgs) {
 export default function Details({
   loaderData: ship,
   params,
+  matches
 }: Route.ComponentProps) {
   if (!ship) {
     return;
   }
+  console.log(matches)
   return (
     <div className="details">
       <Link className="details-close" to={`/page/${params.page}`}>

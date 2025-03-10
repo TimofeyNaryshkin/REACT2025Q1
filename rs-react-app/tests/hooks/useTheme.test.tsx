@@ -6,6 +6,7 @@ import {
   useTheme,
   useThemeUpdate,
 } from '../../src/hooks/useTheme';
+import React from 'react';
 
 vi.spyOn(console, 'log');
 

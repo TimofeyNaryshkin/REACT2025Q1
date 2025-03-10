@@ -14,8 +14,7 @@
     "format:fix": "prettier --write .",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
+    "test": "vitest --ui",
     "coverage": "vitest run --coverage"
   },
   "dependencies": {

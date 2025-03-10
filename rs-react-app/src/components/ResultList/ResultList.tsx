@@ -10,9 +10,9 @@ const ResultList = ({
   params,
   children,
 }: {
-  ships: Result[];
+  ships: Result[] | undefined;
   params: Params;
-  children: React.ReactElement;
+  children: React.ReactElement | null;
 }) => {
   const navigate = useNavigate();
 
@@ -24,7 +24,7 @@ const ResultList = ({
   const isOpened = useAppSelector((state) => state.detailsReducer.isOpened);
 
   const filteredResults =
-    ships.filter((ship) =>
+    ships?.filter((ship) =>
       ship.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
     ) || [];
 
@@ -45,7 +45,7 @@ const ResultList = ({
   return (
     <div className="result-container">
       <div className={classes.list}>
-        {filteredResults ? (
+        {filteredResults.length ? (
           <>
             <div className={classes.header}>
               <div>Name</div>

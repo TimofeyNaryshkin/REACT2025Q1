@@ -1,12 +1,9 @@
 import { it, describe, expect, vi, beforeEach } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import filterReducer from '../../src/store/reducers/FilterSlice';
 import Controls from '../../src/components/Controls/Controls';
-import useLastSearch from '../../src/hooks/useLastSearch';
 import { setupStore } from '../../src/store/store';
 import { useAppDispatch } from '../../src/hooks/redux';
 
