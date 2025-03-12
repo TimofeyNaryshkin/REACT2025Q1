@@ -1,9 +1,9 @@
-import getStarships from 'src/API/StarshipService';
-import Header from 'src/components/Header/Header';
-import ResultList from 'src/components/ResultList/ResultList';
-import Pagination from 'src/components/UI/Pagination/Pagination';
-import Flyout from 'src/components/UI/Flyout/Flyout';
-import { useTheme } from 'src/hooks/useTheme';
+import getStarships from '../../src/API/StarshipService';
+import Header from '../../src/components/Header/Header';
+import ResultList from '../../src/components/ResultList/ResultList';
+import Pagination from '../../src/components/UI/Pagination/Pagination';
+import Flyout from '../../src/components/UI/Flyout/Flyout';
+import { useTheme } from '../../src/hooks/useTheme';
 import { Route } from './+types/page';
 import { Outlet } from 'react-router';
 
