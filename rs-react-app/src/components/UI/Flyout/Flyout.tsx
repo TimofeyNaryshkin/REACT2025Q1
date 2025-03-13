@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import classes from './Flyout.module.css';
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
 import Button from '../Button';
@@ -12,6 +12,11 @@ const Flyout: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const darkTheme = useTheme();
+  useEffect(() => {
+    if (storedItems.length) {
+      downloadCsv(storedItems)
+    }
+  }, [storedItems])
 
   return (
     <div
@@ -22,7 +27,12 @@ const Flyout: React.FC = () => {
       <Button onButtonClick={() => dispatch(unselectAll([]))}>
         Unselect all
       </Button>
-      <Button onButtonClick={() => downloadCsv(storedItems)}>Download</Button>
+      <a 
+        href={storedItems.length ? downloadCsv(storedItems).url : ''}
+        download={storedItems.length ? downloadCsv(storedItems).fileName : true}
+        >
+        Download
+      </a>
     </div>
   );
 };
