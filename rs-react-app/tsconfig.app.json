@@ -22,11 +22,12 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-     /* Aliases */
-     "baseUrl": "./",
-     "paths": {
-       "@components/*": ["src/components/*"],
-     }
+    /* Aliases */
+    "baseUrl": "./",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@store/*": ["src/store/*"]
+    }
   },
   "include": ["src"]
 }
