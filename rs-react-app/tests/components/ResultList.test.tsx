@@ -1,60 +1,28 @@
-import { it, describe, expect, vi, beforeEach, Mock } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { it, describe, expect, vi, afterEach } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import React from 'react';
-import { MemoryRouter } from 'react-router';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import filterReducer from '../../src/store/reducers/FilterSlice';
-import { useAppDispatch } from '../../src/hooks/redux';
 import ResultList from '../../src/components/ResultList/ResultList';
-import { RootState } from '../../src/store/store';
-import { starshipAPI } from '../../src/services/starship';
-import { toggle } from '../../src/store/reducers/DetailsSlice';
+import { setupStore } from '../../src/store/store';
+import { toggle, setShip } from '../../src/store/reducers/DetailsSlice';
+import { Result } from '../../src/types/response';
 
-const mockNavigate = vi.fn();
-const mockDispatch = vi.fn();
+const mockRouter = {
+  push: vi.fn(),
+  replace: vi.fn(),
+  query: {},
+  pathname: '/page/1',
+};
 
-vi.mock('react-router', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-    useLocation: () => location,
-    useSearchParams: () => [new URLSearchParams('page=1')],
-  };
-});
+const mockSearchParams = {
+  get: vi.fn(),
+};
 
-vi.mock('../../src/services/starship', () => ({
-  starshipAPI: {
-    useFetchShipsPageQuery: vi.fn(() => ({
-      data: mockResults,
-      isFetching: false,
-      error: null,
-    })),
-    useFetchShipDetailsQuery: vi.fn(() => ({
-      data: { name: 'Millennium Falcon', model: 'YT-1300' },
-      isFetching: false,
-      error: null,
-    })),
-  },
-}));
-
-vi.mock('../../src/hooks/redux', () => ({
-  useAppSelector: vi.fn(),
-  useAppDispatch: vi.fn(() => vi.fn()),
-}));
-
-vi.mock('../../src/hooks/redux', () => ({
-  useAppSelector: vi.fn((selector: (state: RootState) => unknown) =>
-    selector({
-      detailsReducer: { isOpened: true },
-      storedItemsReducer: {},
-      filterReducer: {},
-      starshipAPI: {},
-    } as RootState)
-  ),
-  useAppDispatch: vi.fn(() => vi.fn()),
+vi.mock('next/navigation', () => ({
+  useRouter: () => mockRouter,
+  useSearchParams: () => mockSearchParams,
+  usePathname: () => '/page/1',
 }));
 
 const mockResults = [
@@ -63,74 +31,51 @@ const mockResults = [
 ];
 
 describe('ResultList', () => {
-  const mockStore = configureStore({
-    reducer: {
-      filterReducer,
-      [starshipAPI.reducerPath]: starshipAPI.reducer,
-    },
-  });
+  const store = setupStore();
+  vi.spyOn(store, 'dispatch');
 
-  const setup = () => {
+  const renderWithProviders = (ships: Result[] | typeof mockResults | []) => {
     return render(
-      <Provider store={mockStore}>
-        <MemoryRouter>
-          <ResultList />
-        </MemoryRouter>
+      <Provider store={store}>
+        <ResultList ships={ships} />
       </Provider>
     );
   };
 
-  beforeEach(() => {
+  afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('renders loading state when fetching', () => {
-    (starshipAPI.useFetchShipsPageQuery as Mock).mockReturnValue({
-      filteredResults: [],
-      isFetching: true,
-      error: null,
-    });
-
-    setup();
-
-    expect(screen.getByTestId('loader')).toBeInTheDocument();
-  });
-  it('displays error message if error occures', () => {
-    (starshipAPI.useFetchShipsPageQuery as Mock).mockReturnValue({
-      filteredResults: [],
-      isFetching: false,
-      error: true,
-    });
-
-    setup();
-
-    expect(screen.getByText('Some error')).toBeInTheDocument();
-  });
   it('displays Nothing found D: message if no results provided', () => {
-    (starshipAPI.useFetchShipsPageQuery as Mock).mockReturnValue({
-      filteredResults: [],
-      isFetching: false,
-      error: false,
-    });
-
-    setup();
+    renderWithProviders([]);
 
     expect(screen.getByText('Nothing found D:')).toBeInTheDocument();
   });
   it('displays list of items if filteredResults is not empty', () => {
-    (starshipAPI.useFetchShipsPageQuery as Mock).mockReturnValue({
-      filteredResults: mockResults,
-      isFetching: false,
-      error: false,
-    });
-
-    setup();
+    renderWithProviders(mockResults);
 
     expect(screen.getByText('X-Wing')).toBeInTheDocument();
+    expect(screen.getByText('TIE Fighter')).toBeInTheDocument();
   });
-  it('calls closeDetails correctly', async () => {
-    vi.mocked(useAppDispatch).mockReturnValue(mockDispatch);
-    setup();
+  it('opens details and updates URL', async () => {
+    renderWithProviders(mockResults);
+
+    fireEvent.click(screen.getByText('X-Wing'));
+
+    const closeButton = await screen.findByRole('button', { name: /close/i });
+
+    expect(closeButton).toBeInTheDocument();
+    expect(mockRouter.push).toHaveBeenCalledWith(
+      `${mockRouter.pathname}?details=X-Wing`,
+      { scroll: false }
+    );
+    expect(store.dispatch).toBeCalledWith(toggle(true));
+    expect(store.dispatch).toBeCalledWith(
+      setShip({ name: 'X-Wing', url: '/ship/1' })
+    );
+  });
+  it('calls closeDetails correctly and updates URL on close button click', async () => {
+    renderWithProviders(mockResults);
 
     fireEvent.click(screen.getByText('X-Wing'));
 
@@ -139,7 +84,27 @@ describe('ResultList', () => {
     expect(closeButton).toBeInTheDocument();
     fireEvent.click(closeButton);
 
-    expect(mockNavigate).toHaveBeenCalledWith('?');
-    expect(mockDispatch).toHaveBeenCalledWith(toggle(false));
+    expect(mockRouter.push).toHaveBeenCalledWith(`${mockRouter.pathname}`, {
+      scroll: false,
+    });
+    expect(store.dispatch).toBeCalledWith(toggle(false));
+  });
+  it('calls closeDetails correctly and updates URL on same item click', async () => {
+    renderWithProviders(mockResults);
+
+    fireEvent.click(screen.getByText('X-Wing'));
+    fireEvent.click(screen.getByText('X-Wing'));
+
+    expect(mockRouter.push).toHaveBeenCalledWith(
+      `${mockRouter.pathname}?details=X-Wing`,
+      { scroll: false }
+    );
+    expect(store.dispatch).toBeCalledWith(toggle(true));
+    waitFor(() => {
+      expect(mockRouter.push).toHaveBeenCalledWith(`${mockRouter.pathname}`, {
+        scroll: false,
+      });
+      expect(store.dispatch).toBeCalledWith(toggle(false));
+    });
   });
 });

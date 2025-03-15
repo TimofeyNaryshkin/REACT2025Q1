@@ -2,7 +2,7 @@
   position: sticky;
   top: 10px;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 5px;
   margin-right: 10px;
 }

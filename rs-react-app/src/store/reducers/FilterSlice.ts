@@ -5,7 +5,7 @@ interface FilterState {
 }
 
 const initialState: FilterState = {
-  searchQuery: localStorage.getItem('lastSearch') || '',
+  searchQuery: '',
 };
 
 export const filterSlice = createSlice({

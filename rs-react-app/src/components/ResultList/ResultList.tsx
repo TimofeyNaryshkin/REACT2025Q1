@@ -1,84 +1,62 @@
-import React, { useState } from 'react';
-import ResultItem from '../ResultItem/ResultItem';
+'use client';
+
+import ResultItem from '@/components/ResultItem/ResultItem';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { Result } from 'types/response';
 import classes from './ResultList.module.css';
-import { useLocation, useNavigate, useSearchParams } from 'react-router';
-import { starshipAPI } from '../../services/starship';
-import Loader from '../UI/Loader/Loader';
-import { Result } from '../../types/response';
-import Details from '../../pages/Details';
-import { detailsSlice } from '../../store/reducers/DetailsSlice';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 
-const ResultList: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const urlPage = searchParams.get('page') || '1';
+import { detailsSlice } from 'store/reducers/DetailsSlice';
+import Details from '@/components/Details/Details';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-  const { toggle } = detailsSlice.actions;
-  const dispatch = useAppDispatch();
-  const [shipPath, setShipPath] = useState('');
+export default function ResultList({ ships }: { ships: Result[] }) {
   const searchQuery = useAppSelector(
     (state) => state.filterReducer.searchQuery
   );
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const details = searchParams.get('details');
+  const pathname = usePathname();
 
-  const { filteredResults, isFetching, error } =
-    starshipAPI.useFetchShipsPageQuery(urlPage, {
-      selectFromResult: ({ data, isFetching, error }) => ({
-        filteredResults:
-          data?.results.filter((ship) =>
-            ship.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
-          ) || [],
-        isFetching,
-        error,
-      }),
-    });
+  const isOpened = useAppSelector((state) => state.detailsReducer.isOpened);
+  const { toggle, setShip } = detailsSlice.actions;
+  const dispatch = useAppDispatch();
+
+  const filteredResults =
+    ships.filter((ship) =>
+      ship.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
+    ) || [];
 
   const closeDetails = () => {
-    const searchParams = new URLSearchParams(location.search).toString();
-    const to = searchParams.includes('&')
-      ? searchParams.slice(0, searchParams.indexOf('&'))
-      : '';
-    navigate(`?${to}`);
-
     dispatch(toggle(false));
+    router.push(pathname, { scroll: false });
   };
 
   const handleClick = (ship: Result) => {
-    setShipPath(ship.url.slice(ship.url.search(/\d+/)));
-
-    const searchParams = new URLSearchParams(location.search);
-    const currentDetails = searchParams.get('details');
-
-    if (currentDetails === ship.name) {
-      searchParams.delete('details');
-      dispatch(toggle(false));
+    if (details === ship.name) {
+      closeDetails();
     } else {
-      searchParams.set('details', ship.name);
       dispatch(toggle(true));
+      dispatch(setShip(ship));
+      router.push(`${pathname}?details=${ship.name}`, { scroll: false });
     }
-    const to = `${location.pathname}?${searchParams.toString()}`;
-    navigate(to);
   };
+
   return (
     <div className="result-container">
       <div className={classes.list}>
-        {error ? (
-          <h1>Some error</h1>
-        ) : isFetching ? (
-          <Loader />
-        ) : filteredResults.length ? (
+        {filteredResults.length ? (
           <>
             <div className={classes.header}>
-              <div>Name</div>
-              <div>Description</div>
+              <p>Name</p>
+              <p>Description</p>
             </div>
             <div className={classes.content}>
-              {filteredResults.map((result) => (
+              {filteredResults.map((ship) => (
                 <ResultItem
-                  key={result.url}
-                  result={result}
-                  onClick={() => handleClick(result)}
+                  key={ship.url}
+                  result={ship}
+                  onClick={() => handleClick(ship)}
                 />
               ))}
             </div>
@@ -87,9 +65,7 @@ const ResultList: React.FC = () => {
           <h2>Nothing found D:</h2>
         )}
       </div>
-      {shipPath && <Details shipPath={shipPath} onButtonClick={closeDetails} />}
+      {isOpened ? <Details onButtonClick={closeDetails} /> : null}
     </div>
   );
-};
-
-export default ResultList;
+}

@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, ReactNode, useContext, useState } from 'react';
 
 export const useTheme = () => useContext(ThemeContext);
@@ -11,7 +13,6 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [darkTheme, setDarkTheme] = useState(false);
   const toggleTheme = () => {
     setDarkTheme((prevTheme) => !prevTheme);
-    console.log(darkTheme);
   };
 
   return (

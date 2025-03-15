@@ -50,7 +50,9 @@ vi.mock('../../src/hooks/redux', () => ({
 }));
 
 vi.mock('../../src/utils/downloadCsv', () => ({
-  downloadCsv: vi.fn(),
+  downloadCsv: vi.fn(() => {
+    return {url: 'some ulr', fileName: 'some filename'}
+  }),
 }));
 
 globalThis.URL.createObjectURL = vi.fn(() => 'mocked-url');

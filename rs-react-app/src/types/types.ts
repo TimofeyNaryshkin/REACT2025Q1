@@ -41,8 +41,3 @@ export interface PaginationProps {
   page: number;
   onButtonClick: (p: number) => void;
 }
-
-export interface DetailsProps {
-  shipPath: string;
-  onButtonClick: () => void;
-}

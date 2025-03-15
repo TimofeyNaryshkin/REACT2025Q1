@@ -6,9 +6,6 @@ import {
   useTheme,
   useThemeUpdate,
 } from '../../src/hooks/useTheme';
-import React from 'react';
-
-vi.spyOn(console, 'log');
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -48,7 +45,6 @@ describe('ThemeProvider', () => {
     await waitFor(() => {
       expect(screen.getByText('dark')).toBeInTheDocument();
     });
-    expect(console.log).toHaveBeenCalledWith(false);
   });
 
   it('toggles theme back to light after two clicks and logs both states', async () => {
@@ -65,9 +61,5 @@ describe('ThemeProvider', () => {
 
     fireEvent.click(toggleButton);
     await waitFor(() => expect(screen.getByText('light')).toBeInTheDocument());
-
-    expect(console.log).toHaveBeenCalledTimes(2);
-    expect(console.log).toHaveBeenNthCalledWith(1, false);
-    expect(console.log).toHaveBeenNthCalledWith(2, true);
   });
 });
