@@ -42,6 +42,11 @@ input {
   width: 300px;
 }
 
+input[type='checkbox'] {
+  width: 22px;
+  height: 22px;
+}
+
 label {
   display: grid;
 }

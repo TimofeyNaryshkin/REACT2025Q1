@@ -26,7 +26,18 @@ const FormField: FC<Partial<FormFieldProps>> = ({
   const countries = useAppSelector((state) => state.countries);
   return (
     <>
-      <label>
+      <label
+        style={
+          name === 'acceptTermsConditions'
+            ? {
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '5px',
+              }
+            : undefined
+        }
+      >
         {name}{' '}
         <input
           onChange={onChange}
