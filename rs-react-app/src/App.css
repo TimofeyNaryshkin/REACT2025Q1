@@ -32,8 +32,11 @@
 }
 
 form {
+  border: 1px solid #646cff;
+  padding: 5px;
+  border-radius: 8px;
   display: grid;
-  max-width: 300px;
+
   text-align: center;
 }
 
