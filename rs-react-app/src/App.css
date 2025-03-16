@@ -1,0 +1,59 @@
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.cards-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.card {
+  max-width: 150px;
+  border: 1px solid #646cff;
+  border-radius: 8px;
+}
+
+.card_new {
+  border-color: lightcoral;
+}
+
+.card__picture {
+  max-width: 150px;
+  max-height: 50px;
+  overflow: hidden;
+}
+
+form {
+  border: 1px solid #646cff;
+  padding: 5px;
+  border-radius: 8px;
+  display: grid;
+
+  text-align: center;
+}
+
+select,
+input {
+  width: 300px;
+}
+
+input[type='checkbox'] {
+  width: 22px;
+  height: 22px;
+}
+
+label {
+  display: grid;
+}
+
+p {
+  min-height: 24px;
+}
