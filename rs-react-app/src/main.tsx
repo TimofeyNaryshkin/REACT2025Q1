@@ -8,7 +8,13 @@ import ReactHookForm from '@components/ReactHookForm.tsx';
 import { Provider } from 'react-redux';
 import { store } from '@store/store.ts';
 
-createRoot(document.getElementById('root')!).render(
+const root = document.getElementById('root');
+
+if (!root) {
+  throw new Error('Root element not found');
+}
+
+createRoot(root).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter>

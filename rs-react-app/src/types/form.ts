@@ -5,8 +5,20 @@ export interface FormData {
   password: string;
   repeatPassword: string;
   gender: string;
-  acceptTermsConditions: boolean;
-  picture: FileList;
+  acceptTermsConditions: boolean | 'on';
+  picture: FileList | File;
+  country: string;
+}
+
+export interface ErrorMessages {
+  name: string;
+  age: string;
+  email: string;
+  password: string;
+  repeatPassword: string;
+  acceptTermsConditions: string;
+  gender: string;
+  picture: string;
   country: string;
 }
 

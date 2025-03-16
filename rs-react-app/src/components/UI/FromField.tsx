@@ -1,29 +1,42 @@
 import { useAppSelector } from '@hooks/redux';
-import { FC } from 'react';
+import { FC, RefObject } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface FormFieldProps {
   register: UseFormRegisterReturn;
-  error: string | undefined;
+  error: string;
   name: string;
-  type?: string;
-  accept?: string;
-  list?: string;
+  type: string;
+  accept: string;
+  list: string;
+  ref: RefObject<HTMLInputElement | null>;
+  onChange: () => void;
 }
 
-const FormField: FC<FormFieldProps> = ({
+const FormField: FC<Partial<FormFieldProps>> = ({
   register,
   error,
   name,
   type,
   accept,
   list,
+  ref,
+  onChange,
 }) => {
   const countries = useAppSelector((state) => state.countries);
   return (
     <>
       <label>
-        {name} <input {...register} type={type} accept={accept} list={list} />
+        {name}{' '}
+        <input
+          onChange={onChange}
+          ref={ref}
+          {...register}
+          type={type}
+          accept={accept}
+          list={list}
+          name={name}
+        />
       </label>
       <p style={{ color: ' #e74c3c' }}>{error}</p>
       {list && (

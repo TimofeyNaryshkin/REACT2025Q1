@@ -3,13 +3,18 @@ import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface GenderSelectProps {
   register: UseFormRegisterReturn;
-  error: string | undefined;
+  error: string;
+  name: string;
 }
 
-const GenderSelect: FC<GenderSelectProps> = ({ register, error }) => {
+const GenderSelect: FC<Partial<GenderSelectProps>> = ({
+  register,
+  error,
+  name,
+}) => {
   return (
     <>
-      <select {...register}>
+      <select name={name} {...register}>
         <option value="female">female</option>
         <option value="male">male</option>
       </select>

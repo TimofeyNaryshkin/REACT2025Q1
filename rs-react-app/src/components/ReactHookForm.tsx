@@ -23,36 +23,38 @@ const ReactHookForm: FC = () => {
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
     navigate('/');
-    const picture = data.picture[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(picture);
-    reader.onload = () => {
-      const base64String = reader.result as string;
-      const encodedData = { ...data, picture: base64String };
-      dispatch(storeData(encodedData));
-    };
+    if (data.picture instanceof FileList) {
+      const picture = data.picture[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(picture);
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        const encodedData = { ...data, picture: base64String };
+        dispatch(storeData(encodedData));
+      };
+    }
   };
 
   const password = watch('password');
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormField
-        name="Name: "
+        name="name"
         error={errors.name?.message}
         register={register('name')}
       />
       <FormField
-        name="Age: "
+        name="age"
         error={errors.age?.message}
         register={register('age')}
       />
       <FormField
-        name="Email: "
+        name="email"
         error={errors.email?.message}
         register={register('email')}
       />
       <FormField
-        name="Password: "
+        name="password"
         type="password"
         error={errors.password?.message}
         register={register('password')}
@@ -61,7 +63,7 @@ const ReactHookForm: FC = () => {
         <PasswordStrengthMetter strength={calcPasswordStrength(password)} />
       )}
       <FormField
-        name="Repeat password: "
+        name="repeatPassword"
         type="password"
         error={errors.repeatPassword?.message}
         register={register('repeatPassword')}
@@ -71,20 +73,20 @@ const ReactHookForm: FC = () => {
         error={errors.gender?.message}
       />
       <FormField
-        name="Accept Terms & Conditions: "
+        name="acceptTermsConditions"
         type="checkbox"
         error={errors.acceptTermsConditions?.message}
         register={register('acceptTermsConditions')}
       />
       <FormField
-        name="Picture: "
+        name="picture"
         type="file"
         accept=".png,.jpeg"
         error={errors.picture?.message}
         register={register('picture')}
       />
       <FormField
-        name="Country: "
+        name="country"
         list="countries"
         error={errors.country?.message}
         register={register('country')}
