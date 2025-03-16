@@ -59,9 +59,7 @@ const ReactHookForm: FC = () => {
         error={errors.password?.message}
         register={register('password')}
       />
-      {password && (
-        <PasswordStrengthMetter strength={calcPasswordStrength(password)} />
-      )}
+      <PasswordStrengthMetter strength={calcPasswordStrength(password)} />
       <FormField
         name="repeatPassword"
         type="password"
@@ -91,7 +89,7 @@ const ReactHookForm: FC = () => {
         error={errors.country?.message}
         register={register('country')}
       />
-      <input type="submit" disabled={!isValid} />
+      <input type="submit" disabled={!isValid} value="Submit" />
     </form>
   );
 };

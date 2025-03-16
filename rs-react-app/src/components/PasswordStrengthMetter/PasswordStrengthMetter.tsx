@@ -9,7 +9,9 @@ const PasswordStrengthMetter: FC<PasswordStrengthMetterProps> = ({
 }) => {
   const colors = ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#27ae60'];
   return (
-    <p style={{ color: colors[strength] }}>Password srength: {strength}</p>
+    <p style={{ color: colors[strength] }}>
+      {strength ? `Password srength: ${strength}` : ''}
+    </p>
   );
 };
 

@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -6,24 +10,42 @@
 }
 
 .cards-container {
-  display: grid;
+  display: flex;
   gap: 10px;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: auto;
+  flex-wrap: wrap;
 }
 
 .card {
   max-width: 150px;
-  border: 1px solid transparent;
+  border: 1px solid #646cff;
   border-radius: 8px;
 }
 
 .card_new {
-  border-color: #646cff;
+  border-color: lightcoral;
 }
 
 .card__picture {
   max-width: 150px;
   max-height: 50px;
   overflow: hidden;
+}
+
+form {
+  display: grid;
+  max-width: 300px;
+  text-align: center;
+}
+
+select,
+input {
+  width: 300px;
+}
+
+label {
+  display: grid;
+}
+
+p {
+  min-height: 24px;
 }

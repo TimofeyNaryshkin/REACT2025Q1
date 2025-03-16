@@ -72,9 +72,7 @@ const UncontrolledForm: FC = () => {
         type="password"
         error={errors?.password}
       />
-      {password && (
-        <PasswordStrengthMetter strength={calcPasswordStrength(password)} />
-      )}
+      <PasswordStrengthMetter strength={calcPasswordStrength(password)} />
       <FormField
         name="repeatPassword"
         type="password"
@@ -93,7 +91,7 @@ const UncontrolledForm: FC = () => {
         error={errors.picture}
       />
       <FormField name="country" list="countries" error={errors.country} />
-      <input type="submit" />
+      <input type="submit" value="Submit" />
     </form>
   );
 };
