@@ -11,3 +11,19 @@
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto;
 }
+
+.card {
+  max-width: 150px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.card_new {
+  border-color: #646cff;
+}
+
+.card__picture {
+  max-width: 150px;
+  max-height: 50px;
+  overflow: hidden;
+}

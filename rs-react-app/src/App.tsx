@@ -1,29 +1,25 @@
 import Navigation from '@components/Navigation/Navigation';
 import './App.css';
 import { useAppSelector } from '@hooks/redux';
+import DataCard from '@components/DataCard/DataCard';
 
 function App() {
-  const formData = useAppSelector(state => state.form.data)
+  const formData = useAppSelector((state) => state.form.data);
+
   return (
     <>
       <Navigation />
-      <div className='cards-container'>
-        {formData.map(data => {
+      <section className="cards-container">
+        {formData.map((data, i) => {
           return (
-            <div className='card'>
-              <p>Name: {data.name}</p>
-              <p>Age: {data.age}</p>
-              <p>Email: {data.email}</p>
-              <p>Passord: {data.password}</p>
-              <p>Repeat password: {data.repeatPassword}</p>
-              <p>Gender: {data.gender}</p>
-              <p>Accept T&C: {data.acceptTermsConditions}</p>
-              <p>Base64 encoded picture: {data.picture}</p>
-              <p>Country: {data.country}</p>
-            </div>
-          )
+            <DataCard
+              key={i}
+              data={data}
+              className={i === formData.length - 1 ? 'card_new card' : 'card'}
+            />
+          );
         })}
-      </div>
+      </section>
     </>
   );
 }

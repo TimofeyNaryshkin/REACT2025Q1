@@ -5,7 +5,7 @@ export interface FormData {
   password: string;
   repeatPassword: string;
   gender: string;
-  acceptTermsConditions: string;
+  acceptTermsConditions: boolean;
   picture: FileList;
   country: string;
 }

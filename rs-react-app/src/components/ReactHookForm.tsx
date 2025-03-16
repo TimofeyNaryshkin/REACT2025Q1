@@ -3,102 +3,93 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import schema from '@utils/schema';
 import { FormData } from 'src/types/form';
-import { useAppDispatch, useAppSelector } from '@hooks/redux';
+import { useAppDispatch } from '@hooks/redux';
 import { useNavigate } from 'react-router';
-import { storeData } from '@store/formSlice'
-
+import { storeData } from '@store/formSlice';
+import PasswordStrengthMetter from './PasswordStrengthMetter/PasswordStrengthMetter';
+import calcPasswordStrength from '@utils/calcPasswordStrength';
+import FormField from './UI/FromField';
+import GenderSelect from './UI/GenderSelect';
 
 const ReactHookForm: FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({ resolver: yupResolver(schema) });
-  const { countries } = useAppSelector(state => state.countries)
-  const navigate = useNavigate()
-  const dispatch = useAppDispatch()
-
+    watch,
+    formState: { errors, isValid },
+  } = useForm<FormData>({ resolver: yupResolver(schema), mode: 'onChange' });
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    navigate('/')
-    const picture = data.picture[0]
-    const reader = new FileReader()
-    reader.readAsDataURL(picture)
+    navigate('/');
+    const picture = data.picture[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(picture);
     reader.onload = () => {
-      const base64String = reader.result as string
-      const encodedData = {...data, picture: base64String}
-      dispatch(storeData(encodedData))
-    }
+      const base64String = reader.result as string;
+      const encodedData = { ...data, picture: base64String };
+      dispatch(storeData(encodedData));
+    };
   };
+
+  const password = watch('password');
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <label>
-        Name: <input {...register('name')} />
-      </label>
-      <p>{errors.name?.message}</p>
-      <label>
-        Age: <input {...register('age')} type="number" />
-      </label>
-      <p>{errors.age?.message}</p>
-      <label>
-        Email: <input {...register('email')} type="email" />
-      </label>
-      <p>{errors.email?.message}</p>
-      <label>
-        Password: <input {...register('password')} type="password" />
-      </label>
-      <p>{errors.password?.message}</p>
-      <label>
-        Repeat password: <input {...register('repeatPassword')} />
-      </label>
-      <p>{errors.repeatPassword?.message}</p>
-      <select {...register('gender')}>
-        <option value="woman">woman</option>
-        <option value="man">man</option>
-      </select>
-      <p>{errors.gender?.message}</p>
-      <label>
-        Accept Terms & Conditions
-        <input {...register('acceptTermsConditions')} type="checkbox" />
-      </label>
-      <p>{errors.acceptTermsConditions?.message}</p>
-      <label>
-        Picture: <input {...register('picture')} type="file" accept='.png,.jpeg' />
-      </label>
-      <p>{errors.picture?.message}</p>
-      <label>
-        Country: <input list="countries" {...register('country')} />
-      </label>
-      <p>{errors.country?.message}</p>
-      <datalist id='countries'>
-        {countries.map(country => <option value={country} />)}
-      </datalist>
-      <input type="submit" />
-
-      {/* {{Object.keys(schema.fields).map((key) => {
-        const type = getType(key);
-        return (
-          <label key={key}>
-            {key === 'gender' ? (
-              <select {...register(key as FormKeys)}>
-                <option value="woman">woman</option>
-                <option value="man">man</option>
-              </select>
-            ) : (
-              <>
-                {`${key}: `}
-                <input
-                  {...register(key as FormKeys)}
-                  type={type}
-                  value={key === 'gender' ? 'woman' : undefined}
-                />
-              </>
-            )}
-            <p>{errors[key as FormKeys]?.message}</p>
-          </label>
-        );
-      })}
-      <input type="submit" />} */}
+      <FormField
+        name="Name: "
+        error={errors.name?.message}
+        register={register('name')}
+      />
+      <FormField
+        name="Age: "
+        error={errors.age?.message}
+        register={register('age')}
+      />
+      <FormField
+        name="Email: "
+        error={errors.email?.message}
+        register={register('email')}
+      />
+      <FormField
+        name="Password: "
+        type="password"
+        error={errors.password?.message}
+        register={register('password')}
+      />
+      {password && (
+        <PasswordStrengthMetter strength={calcPasswordStrength(password)} />
+      )}
+      <FormField
+        name="Repeat password: "
+        type="password"
+        error={errors.repeatPassword?.message}
+        register={register('repeatPassword')}
+      />
+      <GenderSelect
+        register={register('gender')}
+        error={errors.gender?.message}
+      />
+      <FormField
+        name="Accept Terms & Conditions: "
+        type="checkbox"
+        error={errors.acceptTermsConditions?.message}
+        register={register('acceptTermsConditions')}
+      />
+      <FormField
+        name="Picture: "
+        type="file"
+        accept=".png,.jpeg"
+        error={errors.picture?.message}
+        register={register('picture')}
+      />
+      <FormField
+        name="Country: "
+        list="countries"
+        error={errors.country?.message}
+        register={register('country')}
+      />
+      <input type="submit" disabled={!isValid} />
     </form>
   );
 };
