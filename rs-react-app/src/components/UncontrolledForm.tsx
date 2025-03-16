@@ -1,11 +1,7 @@
-import { FC } from "react"
+import { FC } from 'react';
 
 const UncontrolledForm: FC = () => {
-  return (
-    <form>
+  return <form></form>;
+};
 
-    </form>
-  )
-}
-
-export default UncontrolledForm
+export default UncontrolledForm;

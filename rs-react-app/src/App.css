@@ -4,3 +4,10 @@
   padding: 2rem;
   text-align: center;
 }
+
+.cards-container {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto;
+}

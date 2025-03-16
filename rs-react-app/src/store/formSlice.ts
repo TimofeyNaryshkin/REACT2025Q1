@@ -1,20 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import { StoredData } from 'src/types/form';
 
 export interface FormState {
-  data: any;
+  data: StoredData[];
 }
 
 const initialState: FormState = {
-  data: {},
+  data: [],
 };
 
 export const formSlice = createSlice({
   name: 'form',
   initialState,
   reducers: {
-    storeData: (state, action: PayloadAction<any>) => {
-      state.data = action.payload;
+    storeData: (state, action: PayloadAction<StoredData>) => {
+      state.data.push(action.payload);
     },
   },
 });
