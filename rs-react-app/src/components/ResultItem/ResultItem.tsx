@@ -8,7 +8,7 @@ const ResultItem: React.FC<resultItemProps> = ({ result, onClick }) => {
   const { toggleItem } = storedItemsSlice.actions;
   const dispatch = useAppDispatch();
   const items = useAppSelector((state) => state.storedItemsReducer.items);
-  const isChecked = items?.includes(result);
+  const isChecked = items?.some((ship) => ship.url === result.url);
 
   return (
     <div className={classes.item} onClick={onClick}>

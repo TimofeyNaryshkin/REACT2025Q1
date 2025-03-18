@@ -1,6 +1,8 @@
-const getStarships = async (page: number) => {
+import type { IResponse } from 'src/types/response';
+
+const getStarships = async (page: string) => {
   const response = await fetch(`https://swapi.dev/api/starships/?page=${page}`);
-  const data = await response.json();
+  const data: IResponse = await response.json();
   return data;
 };
 

@@ -2,7 +2,6 @@ import { it, expect, describe, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import ResultItem from '../../src/components/ResultItem/ResultItem';
-import React from 'react';
 import { Provider } from 'react-redux';
 import { setupStore } from '../../src/store/store';
 

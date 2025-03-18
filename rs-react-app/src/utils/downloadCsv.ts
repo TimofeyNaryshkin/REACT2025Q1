@@ -11,9 +11,5 @@ export const downloadCsv = (arr: Result[]) => {
   const blob = new Blob(convertToCsv(arr), { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const fileName = `${arr.length}_starship${arr.length > 1 ? 's' : ''}.csv`;
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = fileName;
-  link.click();
-  URL.revokeObjectURL(url);
+  return {url, fileName}
 };

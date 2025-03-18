@@ -8,7 +8,7 @@ const Header: React.FC = () => {
   const toggleTheme = useThemeUpdate();
 
   return (
-    <header className={classes.header}>
+    <header data-testid='header' className={classes.header}>
       <Button onButtonClick={toggleTheme}>Toggle theme</Button>
       <Controls />
     </header>

@@ -1,145 +1,112 @@
-import { it, describe, expect, vi, beforeEach, Mock } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { it, describe, expect, vi, afterEach } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
-import React from 'react';
-import { MemoryRouter } from 'react-router';
+import { ReactElement } from 'react';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import filterReducer from '../../src/store/reducers/FilterSlice';
-import { useAppDispatch } from '../../src/hooks/redux';
 import ResultList from '../../src/components/ResultList/ResultList';
-import { RootState } from '../../src/store/store';
-import { starshipAPI } from '../../src/services/starship';
+import { setupStore } from '../../src/store/store';
 import { toggle } from '../../src/store/reducers/DetailsSlice';
+import { Result } from '../../src/types/response';
+import { Params, BrowserRouter } from 'react-router';
 
-const mockNavigate = vi.fn();
-const mockDispatch = vi.fn();
+const mockRouter = {
+  push: vi.fn(),
+  replace: vi.fn(),
+  query: {},
+  pathname: '/page/1',
+};
 
-vi.mock('react-router', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-    useLocation: () => location,
-    useSearchParams: () => [new URLSearchParams('page=1')],
-  };
-});
-
-vi.mock('../../src/services/starship', () => ({
-  starshipAPI: {
-    useFetchShipsPageQuery: vi.fn(() => ({
-      data: mockResults,
-      isFetching: false,
-      error: null,
-    })),
-    useFetchShipDetailsQuery: vi.fn(() => ({
-      data: { name: 'Millennium Falcon', model: 'YT-1300' },
-      isFetching: false,
-      error: null,
-    })),
-  },
-}));
-
-vi.mock('../../src/hooks/redux', () => ({
-  useAppSelector: vi.fn(),
-  useAppDispatch: vi.fn(() => vi.fn()),
-}));
-
-vi.mock('../../src/hooks/redux', () => ({
-  useAppSelector: vi.fn((selector: (state: RootState) => unknown) =>
-    selector({
-      detailsReducer: { isOpened: true },
-      storedItemsReducer: {},
-      filterReducer: {},
-      starshipAPI: {},
-    } as RootState)
-  ),
-  useAppDispatch: vi.fn(() => vi.fn()),
+vi.mock('next/router', () => ({
+  useRouter: () => mockRouter,
 }));
 
 const mockResults = [
-  { name: 'X-Wing', url: '/ship/1' },
-  { name: 'TIE Fighter', url: '/ship/2' },
+  { name: "Rebel transport",
+    model: "GR-75 medium transport",
+    manufacturer: "Gallofree Yards, Inc.",
+    cost_in_credits: "unknown",
+    length: "90",
+    max_atmosphering_speed: "650",
+    crew: "6",
+    passengers: "90",
+    cargo_capacity: "19000000",
+    consumables: "6 months",
+    hyperdrive_rating: "4.0",
+    MGLT: "20",
+    starship_class: "Medium transport",
+    pilots: [],
+    films: [],
+    created: "2014-12-15T12:34:52.264000Z",
+    edited: "2014-12-20T21:23:49.895000Z",
+    url: "https://swapi.dev/api/starships/17/"
+  },
+  { name: "Executor",
+    model: "Executor-class star dreadnought",
+    manufacturer: "Kuat Drive Yards, Fondor Shipyards",
+    cost_in_credits: "1143350000",
+    length: "19000",
+    max_atmosphering_speed: "n/a",
+    crew: "279,144",
+    passengers: "38000",
+    cargo_capacity: "250000000",
+    consumables: "6 years",
+    hyperdrive_rating: "2.0",
+    MGLT: "40",
+    starship_class: "Star dreadnought",
+    pilots: [],
+    films: [],
+    created: "2014-12-15T12:31:42.547000Z",
+    edited: "2014-12-20T21:23:49.893000Z",
+    url: "https://swapi.dev/api/starships/15/" 
+  },
 ];
 
 describe('ResultList', () => {
-  const mockStore = configureStore({
-    reducer: {
-      filterReducer,
-      [starshipAPI.reducerPath]: starshipAPI.reducer,
-    },
-  });
+  const store = setupStore();
+  vi.spyOn(store, 'dispatch');
 
-  const setup = () => {
+  const renderWithProviders = (ships: Result[] | undefined, params: Params, children: ReactElement | null) => {
     return render(
-      <Provider store={mockStore}>
-        <MemoryRouter>
-          <ResultList />
-        </MemoryRouter>
-      </Provider>
+      <BrowserRouter>
+        <Provider store={store}>
+          <ResultList ships={ships} params={params} children={children}/>
+        </Provider>
+      </BrowserRouter>
+      
     );
   };
 
-  beforeEach(() => {
+  afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('renders loading state when fetching', () => {
-    (starshipAPI.useFetchShipsPageQuery as Mock).mockReturnValue({
-      filteredResults: [],
-      isFetching: true,
-      error: null,
-    });
-
-    setup();
-
-    expect(screen.getByTestId('loader')).toBeInTheDocument();
-  });
-  it('displays error message if error occures', () => {
-    (starshipAPI.useFetchShipsPageQuery as Mock).mockReturnValue({
-      filteredResults: [],
-      isFetching: false,
-      error: true,
-    });
-
-    setup();
-
-    expect(screen.getByText('Some error')).toBeInTheDocument();
-  });
   it('displays Nothing found D: message if no results provided', () => {
-    (starshipAPI.useFetchShipsPageQuery as Mock).mockReturnValue({
-      filteredResults: [],
-      isFetching: false,
-      error: false,
-    });
-
-    setup();
+    renderWithProviders(undefined, {page: '1'}, null);
 
     expect(screen.getByText('Nothing found D:')).toBeInTheDocument();
   });
   it('displays list of items if filteredResults is not empty', () => {
-    (starshipAPI.useFetchShipsPageQuery as Mock).mockReturnValue({
-      filteredResults: mockResults,
-      isFetching: false,
-      error: false,
-    });
+    renderWithProviders(mockResults, {page: '1'}, null);
 
-    setup();
-
-    expect(screen.getByText('X-Wing')).toBeInTheDocument();
+    expect(screen.getByText('Rebel transport')).toBeInTheDocument();
+    expect(screen.getByText('Executor')).toBeInTheDocument();
   });
-  it('calls closeDetails correctly', async () => {
-    vi.mocked(useAppDispatch).mockReturnValue(mockDispatch);
-    setup();
+  it('opens details and updates URL', async () => {
+    renderWithProviders(mockResults, {page: '1'}, null);
 
-    fireEvent.click(screen.getByText('X-Wing'));
+    fireEvent.click(screen.getByText('Rebel transport'));
 
-    const closeButton = await screen.findByRole('button', { name: /close/i });
-
-    expect(closeButton).toBeInTheDocument();
-    fireEvent.click(closeButton);
-
-    expect(mockNavigate).toHaveBeenCalledWith('?');
-    expect(mockDispatch).toHaveBeenCalledWith(toggle(false));
+    expect(window.location.pathname).toBe('/page/1/details/17')
+    expect(store.dispatch).toBeCalledWith(toggle(true));
+  });
+  it('calls closeDetails correctly and updates URL on same item click', async () => {
+    renderWithProviders(mockResults, {page: '1', id: '17'}, null);
+    
+    await waitFor(() => {
+      fireEvent.click(screen.getByText('Rebel transport'));
+      expect(window.location.pathname).toBe('/page/1')
+      expect(store.dispatch).toBeCalledWith(toggle(false));
+    })
+    
   });
 });
