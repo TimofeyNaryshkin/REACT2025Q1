@@ -40,10 +40,10 @@ export default function CountryItem({ country }: CountryItemProps) {
       onClick={() => storeItem(country)}
       className={classes.item + (isStored ? ` ${classes.stored}` : '')}
     >
+      <p>{country.flag}</p>
       <p>{country.name.official}</p>
       <p>{country.population}</p>
       <p>{country.region}</p>
-      <p>{country.flag}</p>
     </div>
   );
 }

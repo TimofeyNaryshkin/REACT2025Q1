@@ -57,6 +57,7 @@ export default function CountriesList() {
   return (
     <div className={classes.list}>
       <div className={classes.header}>
+        <p>Flag</p>
         <label>
           Name:
           <input
@@ -80,7 +81,6 @@ export default function CountriesList() {
           Population
         </button>
         <Filter regions={regions} onChange={setRegion} />
-        <strong>Flag</strong>
       </div>
       {sortedCountries.length ? (
         sortedCountries.map((country) => (
