@@ -3,3 +3,8 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 5px;
 }
+
+.stored {
+  border-radius: 8px;
+  border: 1px solid #646cff;
+}

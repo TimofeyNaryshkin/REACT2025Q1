@@ -55,7 +55,7 @@ export default function CountriesList() {
   }, [sortOrder, filteredCountries]);
 
   return (
-    <>
+    <div className={classes.list}>
       <div className={classes.header}>
         <label>
           Name:
@@ -89,6 +89,6 @@ export default function CountriesList() {
       ) : (
         <h2>Nothing found D:</h2>
       )}
-    </>
+    </div>
   );
 }
