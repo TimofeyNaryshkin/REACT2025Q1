@@ -64,6 +64,7 @@ export default function CountriesList() {
             type="search"
             list="country-name"
             onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchQuery}
           />
         </label>
         <datalist id="country-name">
