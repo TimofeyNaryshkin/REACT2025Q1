@@ -59,7 +59,7 @@ export default function CountriesList() {
       <div className={classes.header}>
         <p>Flag</p>
         <label>
-          Name:
+          Name:{' '}
           <input
             type="search"
             list="country-name"
