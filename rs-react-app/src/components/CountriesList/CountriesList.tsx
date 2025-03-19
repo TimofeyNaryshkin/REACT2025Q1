@@ -1,18 +1,8 @@
-import CountryItem from "@components/CountryItem/CountryItem"
-import getCountries from "@services/CountriesService"
-import { useEffect, useState } from "react"
-import { Country } from "src/types/types"
+import CountryItem from '@components/CountryItem/CountryItem';
+import { CountriesListProps } from 'src/types/types';
 
-export default function CountriesList() {
-  const [countries, setCountries] = useState<Country[]>([])
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getCountries()
-      setCountries(data)
-    }
-    fetchData()
-  }, [])
-  return (
-    countries.map(country => <CountryItem country={country} />)
-  )
+export default function CountriesList({ countries }: CountriesListProps) {
+  return countries.map((country) => (
+    <CountryItem key={country.name.common} country={country} />
+  ));
 }

@@ -1,7 +1,15 @@
-export interface Counties {}
-
 export interface CountryItemProps {
   country: Country;
+}
+
+export interface CountriesListProps {
+  countries: Country[];
+
+}
+
+export interface FilterProps {
+  regions: string[];
+  onChange: (e: string) => void;
 }
 
 export interface Country {

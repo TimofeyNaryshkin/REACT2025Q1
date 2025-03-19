@@ -29,7 +29,7 @@
       "@store/*": ["src/store/*"],
       "@utils/*": ["src/utils/*"],
       "@hooks/*": ["src/hooks/*"],
-      "@services/*": ["src/services/*"],
+      "@services/*": ["src/services/*"]
     }
   },
   "include": ["src"]
