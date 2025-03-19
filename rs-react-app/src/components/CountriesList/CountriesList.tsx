@@ -8,10 +8,11 @@ import Filter from '@components/UI/Filter/Filter';
 
 export default function CountriesList() {
   const [countries, setCountries] = useState<Country[]>([]);
-  const [filteredCountries, setFlteredCountries] = useState<Country[]>([]);
+  const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
   const [region, setRegion] = useState<string>('All');
-  const [sortOrder, setSortOrder] = useState<string>('descending');
+  const [sortOrder, setSortOrder] = useState('descending');
   const [sortedCountries, setSortedCountries] = useState<Country[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,13 +25,19 @@ export default function CountriesList() {
   const regions = getRegions(countries);
 
   useEffect(() => {
-    if (region === 'All') {
-      setFlteredCountries(countries);
-    } else {
-      const results = countries.filter((country) => country.region === region);
-      setFlteredCountries(results);
+    let results = countries;
+    if (region !== 'All') {
+      results = countries.filter((country) => country.region === region);
     }
-  }, [region, countries]);
+    if (searchQuery) {
+      results = results.filter((country) =>
+        country.name.official
+          .toLowerCase()
+          .includes(searchQuery.trim().toLowerCase())
+      );
+    }
+    setFilteredCountries(results);
+  }, [region, countries, searchQuery]);
 
   useEffect(() => {
     if (sortOrder === 'ascending') {
@@ -45,12 +52,24 @@ export default function CountriesList() {
       );
       setSortedCountries(descendingSorted);
     }
-  }, [sortOrder, filteredCountries, countries]);
+  }, [sortOrder, filteredCountries]);
 
   return (
     <>
       <div className={classes.header}>
-        <strong>Name</strong>
+        <label>
+          Name:
+          <input
+            type="search"
+            list="country-name"
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </label>
+        <datalist id="country-name">
+          {sortedCountries.map((country) => (
+            <option key={country.name.official}>{country.name.official}</option>
+          ))}
+        </datalist>
         <button
           onClick={() => {
             setSortOrder(
@@ -63,9 +82,13 @@ export default function CountriesList() {
         <Filter regions={regions} onChange={setRegion} />
         <strong>Flag</strong>
       </div>
-      {sortedCountries.map((country) => (
-        <CountryItem key={country.name.common} country={country} />
-      ))}
+      {sortedCountries.length ? (
+        sortedCountries.map((country) => (
+          <CountryItem key={country.name.common} country={country} />
+        ))
+      ) : (
+        <h2>Nothing found D:</h2>
+      )}
     </>
   );
 }
