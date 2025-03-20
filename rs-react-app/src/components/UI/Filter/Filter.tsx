@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { FilterProps } from 'src/types/types';
 
-export default function Filter({ regions, onChange }: FilterProps) {
+const Filter = memo(function Filter({ regions, onChange }: FilterProps) {
   return (
     <label>
       {'Region '}
@@ -16,4 +17,6 @@ export default function Filter({ regions, onChange }: FilterProps) {
       </select>
     </label>
   );
-}
+});
+
+export default Filter;

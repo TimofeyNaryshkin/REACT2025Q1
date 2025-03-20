@@ -1,17 +1,14 @@
 import CountryItem from '@components/CountryItem/CountryItem';
 import { Country } from 'src/types/types';
 import classes from './CountriesList.module.css';
-import getRegions from '@utils/getRegions';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import getCountries from '@services/CountriesService';
 import Filter from '@components/UI/Filter/Filter';
 
 export default function CountriesList() {
   const [countries, setCountries] = useState<Country[]>([]);
-  const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
   const [region, setRegion] = useState<string>('All');
-  const [sortOrder, setSortOrder] = useState('descending');
-  const [sortedCountries, setSortedCountries] = useState<Country[]>([]);
+  const [sortOrder, setSortOrder] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -22,36 +19,30 @@ export default function CountriesList() {
     fetchData();
   }, []);
 
-  const regions = getRegions(countries);
+  const regions = useMemo(() => {
+    const regionsArray = countries.map((country) => country.region);
+    return Array.from(new Set(regionsArray));
+  }, [countries]);
 
-  useEffect(() => {
-    let results = countries;
-    if (region !== 'All') {
-      results = countries.filter((country) => country.region === region);
-    }
-    if (searchQuery) {
-      results = results.filter((country) =>
+  const filteredCountries = useMemo(() => {
+    return countries.filter((country) => {
+      return (
+        (region === 'All' || country.region === region) &&
         country.name.official
           .toLowerCase()
           .includes(searchQuery.trim().toLowerCase())
       );
-    }
-    setFilteredCountries(results);
-  }, [region, countries, searchQuery]);
+    });
+  }, [countries, region, searchQuery]);
 
-  useEffect(() => {
+  const sortedCountries = useMemo(() => {
     if (sortOrder === 'ascending') {
-      const ascendingSorted = [...filteredCountries].sort(
-        (a, b) => a.population - b.population
-      );
-      setSortedCountries(ascendingSorted);
+      return [...filteredCountries].sort((a, b) => a.population - b.population);
     }
     if (sortOrder === 'descending') {
-      const descendingSorted = [...filteredCountries].sort(
-        (a, b) => b.population - a.population
-      );
-      setSortedCountries(descendingSorted);
+      return [...filteredCountries].sort((a, b) => b.population - a.population);
     }
+    return filteredCountries;
   }, [sortOrder, filteredCountries]);
 
   return (

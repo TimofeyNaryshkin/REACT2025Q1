@@ -1,8 +1,8 @@
 import { Country, CountryItemProps } from 'src/types/types';
 import classes from './CountryItem.module.css';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
-export default function CountryItem({ country }: CountryItemProps) {
+const CountryItem = memo(function CountryItem({ country }: CountryItemProps) {
   const [isStored, setIsStored] = useState(false);
 
   useEffect(() => {
@@ -46,4 +46,6 @@ export default function CountryItem({ country }: CountryItemProps) {
       <p>{country.region}</p>
     </div>
   );
-}
+});
+
+export default CountryItem;
