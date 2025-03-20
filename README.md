@@ -16,3 +16,32 @@ After that I pressed population button twice to sort list ascending and descendi
 
 - Finally I typed country name in name input and it took 24 renders since each input resulted in change of 3 states and again lots of child components rerendered as well.
 ![name input change](https://github.com/user-attachments/assets/c1691cfb-8e05-418c-9f2e-840d10e02b45)
+
+
+## Update the App with React.memo and useMemo
+- After adding memo to CountryItem, render duration reduced from 8-12ms to ~2ms after evey population sort, because CountryItem didn't rerender since it's props didn't change.
+![image](https://github.com/user-attachments/assets/13cceb42-1669-4e01-ab11-d1b9e14ca18a)
+
+- Same render optimization after filtering via region select, it took from 0,7ms to 3ms instead of 10ms to render, since CountryItem didn't rerender.
+![image](https://github.com/user-attachments/assets/45f89569-f007-4352-9198-8956cfa61487)
+
+- And again I typed in name input to filter via country name and render time reduced as well as commit time.
+![image](https://github.com/user-attachments/assets/538fa029-932e-4050-9272-bbad0b0f3438)
+
+- I replaced filtered and sorted states with useMemo values that resuslted in 2 initial renders instead of 6.
+![image](https://github.com/user-attachments/assets/c96d7b14-aa10-4658-86e8-3f94253487a6)
+
+- And it now takes only 1 render to sort countries instead of 2
+![image](https://github.com/user-attachments/assets/96a5dff1-6814-4493-bfa7-2f4aaa8bd850)
+
+- Same with gerion filter, it now renders 1 time on each reion select instead of 3, render time also reduced from 1,4ms to 0,6 ms.
+![image](https://github.com/user-attachments/assets/c5ad40b5-34e7-403d-a6ec-526b91e163c2)
+![image](https://github.com/user-attachments/assets/a4a5ba89-ca55-4c46-8ba2-a88fbff8ee92)
+
+- And finally I typed text in name input and on every input only 1 state (seacrhQuery) changed so now it renders once, but the CountriesList render time increased from 0,4ms to 0,9-1,4ms so commit time didnt change much.
+![image](https://github.com/user-attachments/assets/2ce1c16d-efcf-4dc9-bccb-37b241634e55)
+
+
+
+
+
