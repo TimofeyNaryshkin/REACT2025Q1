@@ -1,7 +1,7 @@
 import CountryItem from '@components/CountryItem/CountryItem';
 import { Country } from 'src/types/types';
 import classes from './CountriesList.module.css';
-import { useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import getCountries from '@services/CountriesService';
 import Filter from '@components/UI/Filter/Filter';
 
@@ -45,6 +45,14 @@ export default function CountriesList() {
     return filteredCountries;
   }, [sortOrder, filteredCountries]);
 
+  const sort = useCallback(() => {
+    setSortOrder(sortOrder === 'ascending' ? 'descending' : 'ascending');
+  }, [sortOrder]);
+
+  const search = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  }, []);
+
   return (
     <div className={classes.list}>
       <div className={classes.header}>
@@ -54,7 +62,7 @@ export default function CountriesList() {
           <input
             type="search"
             list="country-name"
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={search}
             value={searchQuery}
           />
         </label>
@@ -63,15 +71,7 @@ export default function CountriesList() {
             <option key={country.name.official}>{country.name.official}</option>
           ))}
         </datalist>
-        <button
-          onClick={() => {
-            setSortOrder(
-              sortOrder === 'ascending' ? 'descending' : 'ascending'
-            );
-          }}
-        >
-          Population
-        </button>
+        <button onClick={sort}>Population</button>
         <Filter regions={regions} onChange={setRegion} />
       </div>
       {sortedCountries.length ? (
