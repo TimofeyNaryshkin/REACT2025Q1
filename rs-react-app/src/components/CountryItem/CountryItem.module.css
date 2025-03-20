@@ -1,0 +1,10 @@
+.item {
+  display: grid;
+  grid-template-columns: 30px 2fr 1fr 1fr;
+  gap: 5px;
+}
+
+.stored {
+  border-radius: 8px;
+  border: 1px solid #646cff;
+}

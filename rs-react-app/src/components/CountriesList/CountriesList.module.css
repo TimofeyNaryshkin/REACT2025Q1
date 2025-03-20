@@ -1,0 +1,12 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 30px 2fr 1fr 1fr;
+  gap: 5px;
+  align-items: center;
+}
